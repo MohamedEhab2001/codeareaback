@@ -1,7 +1,5 @@
 require("dotenv").config();
 require("express-async-errors");
-// const { default: axios } = require("axios");
-// const buffer = require("buffer").Buffer;
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -10,15 +8,30 @@ const errorHandlerMiddleware = require("./middlewares/errorHandler");
 const notFound = require("./middlewares/notFound");
 const sequelize = require("./database/connect");
 const visitorRoute = require("./routes/visitor");
+const slotsRoute = require("./routes/slots");
+const demoRoute = require("./routes/demo");
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+  })
+);
 
 app.use("/visitor", visitorRoute);
+app.use("/slots", slotsRoute);
+app.use("/demo", demoRoute);
+
 app.use(notFound);
 app.use(errorHandlerMiddleware);
 
 const defineModels = () => {
-  const modelDefiners = [require("./database/models/visitors")];
+  const modelDefiners = [
+    require("./database/models/visitors"),
+    require("./database/models/demo"),
+    require("./database/models/zoom"),
+    require("./database/models/slot"),
+    require("./database/models/demo_class"),
+  ];
 
   for (const modelDefiner of modelDefiners) {
     modelDefiner();

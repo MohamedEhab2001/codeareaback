@@ -3,7 +3,8 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     type: err.constructor.name,
     msg: err.message,
     fixIt: err.howToFix,
-    status: err.statusCode,
+    status: err.statusCode || err.status,
+    err
   });
 };
 

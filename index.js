@@ -10,6 +10,8 @@ const sequelize = require("./database/connect");
 const visitorRoute = require("./routes/visitor");
 const slotsRoute = require("./routes/slots");
 const demoRoute = require("./routes/demo");
+const createStudentRoute = require("./routes/createStudentRoute");
+
 app.use(express.json());
 app.use(
   cors({
@@ -20,6 +22,7 @@ app.use(
 app.use("/visitor", visitorRoute);
 app.use("/slots", slotsRoute);
 app.use("/demo", demoRoute);
+app.use('/createStudent',createStudentRoute)
 
 app.use(notFound);
 app.use(errorHandlerMiddleware);
@@ -31,6 +34,8 @@ const defineModels = () => {
     require("./database/models/zoom"),
     require("./database/models/slot"),
     require("./database/models/demo_class"),
+    require("./database/models/student"),
+
   ];
 
   for (const modelDefiner of modelDefiners) {

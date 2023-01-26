@@ -3,13 +3,13 @@ const sequelize = require("../connect");
 
 module.exports = () => {
   sequelize.define(
-    "demoApp",
+    "student",
     {
-      country: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      st_name: {
+      email: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -17,29 +17,39 @@ module.exports = () => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      st_age: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      st_gender: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+
       parent_email: {
         type: DataTypes.STRING,
         allowNull: false,
       },
+
       parent_phone: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+
+      gender: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+
+      birthday: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+
+      teacher_id: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      slot_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
+      
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
     },
     {
-      tableName: "demo_app",
+      tableName: "student",
       underscored: true,
     }
   );

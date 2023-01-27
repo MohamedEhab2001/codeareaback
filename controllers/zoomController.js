@@ -19,7 +19,7 @@ const create = async (req, res, next) => {
     pre_schedule: false,
     schedule_for: "codearea.eg@gmail.com",
     start_time: slot.appointment,
-    timezone: "Africa/Cairo",
+    timezone: "UTC",
     topic: "My Meeting",
     type: 2,
   };

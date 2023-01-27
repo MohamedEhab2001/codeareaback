@@ -25,8 +25,7 @@ class Zoom {
       }
     } catch (error) {
       if (error.response.status == 401) {
-        this.refreshToken();
-        return this._token;
+        return this.refreshToken();
       }
     }
   }
@@ -45,13 +44,21 @@ class Zoom {
           Authorization: `Basic ${autCode}`,
         },
       });
-      await sequalize.query(
-        UpdateTokens(response.data.token, response.data.refreshToken)
+      //.log(response);
+      await models.zoom.update(
+        {
+          token: response.data.access_token,
+          refreshToken: response.data.refresh_token,
+        },
+        {
+          where: {
+            id: 1,
+          },
+        }
       );
-      console.log(response);
-      this.setToken();
+      return response.data.access_token
     } catch (error) {
-      if (error?.response?.status == 400) {
+      if (error?.response?.status == 400 || error?.response?.status == 401) {
         console.log(error);
       }
     }

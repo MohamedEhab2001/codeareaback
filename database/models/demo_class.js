@@ -1,6 +1,5 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../connect");
-
 module.exports = () => {
   sequelize.define(
     "demoClass",
@@ -11,6 +10,10 @@ module.exports = () => {
       },
       teacher_id: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      number: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       teacher_duration: {

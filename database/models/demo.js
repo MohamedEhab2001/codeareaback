@@ -13,6 +13,10 @@ module.exports = () => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      parent_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       st_age: {
         type: DataTypes.STRING,
         allowNull: true,

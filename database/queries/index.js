@@ -4,7 +4,7 @@ const slot_availabilty_count = () => {
   from codearea.slot_availablity
   inner join codearea.slot
   on codearea.slot_availablity.slot_id = codearea.slot.id
-  where codearea.slot.appointment > now()+ interval '1 DAY';
+  where codearea.slot.appointment > now()+ interval '0 DAY';
 `;
 };
 

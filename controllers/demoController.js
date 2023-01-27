@@ -2,6 +2,8 @@ const { models } = require("../database/connect");
 const { Teacher_id, Delete_Availabilty } = require("../database/queries");
 const sequalize = require("../database/connect");
 const { QueryTypes } = require("sequelize");
+const { makeid } = require("../helpers/Methods");
+
 const addDemo = async (req, res, next) => {
   const newDemo = await models.demoApp.create(req.body);
   req.demo = newDemo;
@@ -31,6 +33,7 @@ const createDemoClass = async (req, res) => {
     teacher_duration: 0,
     student_duration: 0,
     meeting_url: join_url,
+    number: makeid(15),
   });
   req.operations = { ...req.operations, classCreated: "done" };
   res.status(201).json({

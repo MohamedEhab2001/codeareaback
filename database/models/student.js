@@ -28,6 +28,11 @@ module.exports = () => {
         allowNull: false,
       },
 
+      purchase_number: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+
       gender: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -45,6 +50,11 @@ module.exports = () => {
       
       password: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+
+      paid: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
       },
     },

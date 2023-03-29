@@ -14,7 +14,7 @@ const create = async (req, res, next) => {
   const meetingObj = {
     agenda: "My Meeting",
     default_password: false,
-    duration: 40,
+    duration: 70,
     password: "123456",
     pre_schedule: false,
     schedule_for: "codearea.eg@gmail.com",
@@ -37,6 +37,7 @@ const create = async (req, res, next) => {
     start_url: response.data.start_url,
     join_url: response.data.join_url,
   };
+  req.start = slot.appointment;
   req.operations = { ...req.operations, createMeeting: "done" };
   next();
 };

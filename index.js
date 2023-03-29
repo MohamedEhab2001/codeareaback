@@ -10,19 +10,22 @@ const sequelize = require("./database/connect");
 const visitorRoute = require("./routes/visitor");
 const slotsRoute = require("./routes/slots");
 const demoRoute = require("./routes/demo");
-const createStudentRoute = require("./routes/createStudentRoute");
-
+const StudentRoute = require("./routes/StudentRoute");
+const stripeRouter = require("./routes/stripe");
+const curriculumRouter = require("./routes/curriculum");
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "http://localhost:3001"],
   })
 );
 
 app.use("/visitor", visitorRoute);
 app.use("/slots", slotsRoute);
 app.use("/demo", demoRoute);
-app.use('/createStudent',createStudentRoute)
+app.use("/student", StudentRoute);
+app.use("/pay", stripeRouter);
+app.use("/curriculum", curriculumRouter);
 
 app.use(notFound);
 app.use(errorHandlerMiddleware);
@@ -35,7 +38,10 @@ const defineModels = () => {
     require("./database/models/slot"),
     require("./database/models/demo_class"),
     require("./database/models/student"),
-
+    require("./database/models/zoho"),
+    require("./database/models/course"),
+    require("./database/models/chapter"),
+    require("./database/models/operation"),
   ];
 
   for (const modelDefiner of modelDefiners) {

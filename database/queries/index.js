@@ -28,9 +28,23 @@ const UpdateTokens = (token, refresh_token) => {
   `;
 };
 
+const getDemoByNumber = (num) => {
+  return `select codearea.demo_app.* from codearea.demo_app inner join codearea.demo_class on codearea.demo_class.demo_app_id = codearea.demo_app.id 
+  where codearea.demo_class.number = '${num}';`;
+};
+
+const returnStudentIdFromEmailPhone = (email, phone) => {
+  return `select codearea.student.id from codearea.student where codearea.student.parent_email = '${email}' AND codearea.student.parent_phone = '${phone}' FETCH FIRST 1 ROWS ONLY;`;
+};
+const UpdateLastPayment = (sid, pid) => {
+  return `UPDATE codearea.operation SET status = 'end' WHERE codearea.operation.student_id = ${sid} AND codearea.operation.status = 'current' AND codearea.operation.id != ${pid};`;
+};
 module.exports = {
   slot_availabilty_count,
   Teacher_id,
   Delete_Availabilty,
   UpdateTokens,
+  getDemoByNumber,
+  returnStudentIdFromEmailPhone,
+  UpdateLastPayment
 };

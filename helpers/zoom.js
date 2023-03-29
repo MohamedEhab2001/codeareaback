@@ -1,8 +1,6 @@
 const { default: axios } = require("axios");
 const { models } = require("../database/connect");
 const buffer = require("buffer").Buffer;
-const sequalize = require("../database/connect");
-const { UpdateTokens } = require("../database/queries");
 
 class Zoom {
   _token = "";
@@ -44,7 +42,6 @@ class Zoom {
           Authorization: `Basic ${autCode}`,
         },
       });
-      //.log(response);
       await models.zoom.update(
         {
           token: response.data.access_token,

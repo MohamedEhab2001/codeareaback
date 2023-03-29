@@ -53,6 +53,10 @@ module.exports = () => {
         allowNull: false,
         defaultValue: false,
       },
+      number: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
     {
       tableName: "demo_class",

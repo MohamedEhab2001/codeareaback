@@ -14,11 +14,7 @@ const StudentRoute = require("./routes/StudentRoute");
 const stripeRouter = require("./routes/stripe");
 const curriculumRouter = require("./routes/curriculum");
 app.use(express.json());
-app.use(
-  cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
-  })
-);
+app.use(cors());
 
 app.use("/visitor", visitorRoute);
 app.use("/slots", slotsRoute);

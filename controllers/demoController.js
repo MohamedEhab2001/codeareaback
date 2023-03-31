@@ -20,8 +20,8 @@ const afterDemoRegistration = async (req, res, next) => {
   const teacher = await sequalize.query(Teacher_id(req.demo.slot_id), {
     type: QueryTypes.SELECT,
   });
-  await sequalize.query(
-    Delete_Availabilty(req.demo.slot_id, teacher[0].teacher_id)
+ await sequalize.query(
+   Delete_Availabilty(req.demo.slot_id, teacher[0].teacher_id)
   );
   req.teacher = teacher[0].teacher_id;
   req.operations = { ...req.operations, afterDemo: "done" };

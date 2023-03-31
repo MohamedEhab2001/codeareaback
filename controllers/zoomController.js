@@ -12,16 +12,17 @@ const create = async (req, res, next) => {
     },
   });
   const meetingObj = {
-    agenda: "My Meeting",
+    agenda: `Demo Session for ${req.body.st_name}`,
     default_password: false,
-    duration: 70,
+    duration: 110,
     password: "123456",
     pre_schedule: false,
     schedule_for: "codearea.eg@gmail.com",
     start_time: slot.appointment,
     timezone: "UTC",
-    topic: "My Meeting",
+    topic: `Demo Session for ${req.body.st_name}`,
     type: 2,
+    participant_name: req.body.st_name,
   };
 
   const response = await axios.post(

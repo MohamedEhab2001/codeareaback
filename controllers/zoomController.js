@@ -23,7 +23,7 @@ const create = async (req, res, next) => {
     password: "123456",
     pre_schedule: false,
     schedule_for: "codearea.eg@gmail.com",
-    start_time: req.paid ? req.classes[0].appointment : slot.appointment,
+    start_time: req.paid ? req.classes[0]?.appointment : slot?.appointment,
     timezone: "UTC",
     topic: `${req.paid ? "Paid Session" : "Demo Session"} for ${
       req.body.st_name
@@ -32,6 +32,7 @@ const create = async (req, res, next) => {
     participant_name: req.body.st_name,
   };
 
+  console.log(`Bearer ${token}`);
   const response = await axios.post(
     `${process.env.ZOOM_BASE}users/me/meetings`,
     meetingObj,
@@ -47,7 +48,7 @@ const create = async (req, res, next) => {
     join_url: response.data.join_url,
   };
   if (!req.paid) {
-    req.start = slot.appointment;
+    req.start = slot?.appointment;
     req.operations = { ...req.operations, createMeeting: "done" };
   }
   if (req.paid) {
@@ -62,6 +63,7 @@ const create = async (req, res, next) => {
       }
     );
   }
+  res.status(200).json(token);
   next(); // if paid createNextMeetingUrl || sendClasses
 };
 

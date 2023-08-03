@@ -56,6 +56,7 @@ class Zoom {
       return response.data.access_token;
     } catch (error) {
       if (error?.response?.status == 400 || error?.response?.status == 401) {
+        console.log("error.response.data");
         console.log(error.response.data);
 
       }

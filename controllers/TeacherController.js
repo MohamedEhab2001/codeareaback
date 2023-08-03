@@ -1,5 +1,6 @@
 const { models } = require("../database/connect");
 const { ModelKeysValidate } = require("../helpers/Validation");
+const jwt = require("jsonwebtoken");
 
 const getTeacherById = async (req, res) => {
   const { id } = req.params;
@@ -9,6 +10,22 @@ const getTeacherById = async (req, res) => {
     },
   });
   res.status(200).json({ teacher });
+};
+
+const loginTeacher = (req, res) => {
+  req.teacher["password"] = "";
+  const token = jwt.sign(
+    {
+      student: {
+        ...req.teacher.dataValues,
+      },
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "1h",
+    }
+  );
+  res.status(200).json({ token });
 };
 
 const createTeacher = async (req, res) => {
@@ -88,4 +105,5 @@ module.exports = {
   deleteTeacher,
   createTeacherSchedule,
   changeTeacherSlotAvailability,
+  loginTeacher,
 };

@@ -14,6 +14,7 @@ const StudentRoute = require("./routes/StudentRoute");
 const TeacherRoute = require("./routes/TeacherRoute");
 const stripeRouter = require("./routes/stripe");
 const curriculumRouter = require("./routes/curriculum");
+const mailRouter = require("./routes/mailRoute");
 app.use(express.json());
 app.use(cors());
 
@@ -24,6 +25,7 @@ app.use("/student", StudentRoute);
 app.use("/teacher", TeacherRoute);
 app.use("/pay", stripeRouter);
 app.use("/curriculum", curriculumRouter);
+app.use("/mail", mailRouter);
 
 app.route("/").get((req, res) => {
   res.json({

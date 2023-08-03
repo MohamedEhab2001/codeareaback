@@ -298,36 +298,60 @@ WHERE
 
 
 
-SELECT *  FROM codearea.student_schedule;
-SELECT * FROM  codearea.paid_class;
-SELECT * from codearea.teacher_schedule;
+SELECT *  FROM codearea.student;
+SELECT * FROM  codearea.paid_class where codearea.paid_class.student_id = 70;
+SELECT * from codearea.teacher_schedule where teacher_id = 1;
+SELECT * from codearea.teacher;
 -------------------------------------------------
 SELECT * from codearea.student;
 SELECT * from codearea.operation;
 SELECT * from codearea.operation_chapter;
+insert into codearea.operation_chapter(operation_id , chapter_id) values (46 , 3)
 SELECT * from codearea.plan;
 SELECT * from codearea.chapter;
 SELECT * from codearea.lesson;
 SELECT * from codearea.course;
 SELECT * from codearea.plan;
-SELECT * from codearea.student;
+-- mena and salma password changed
+SELECT * from codearea.student ORDER BY codearea.student.id ASC;
 SELECT * from codearea.demo_app;
+SELECT * from codearea.demo_app where DATE(created_at) = CURRENT_DATE  ORDER BY codearea.demo_app.id ASC ;
 SELECT * from codearea.demo_class;
-SELECT * from codearea.slot;
-SELECT * from codearea.slot_availablity;
+SELECT * from codearea.slot ORDER BY codearea.slot.id ASC;
+SELECT * from codearea.slot where DATE(created_at) = CURRENT_DATE  ORDER BY codearea.slot.id ASC
+SELECT * from codearea.slot_availablity where DATE(created_at) = CURRENT_DATE  ORDER BY codearea.slot_availablity.slot_id ASC;
+SELECT * from codearea.visitors;
 
 INSERT INTO codearea.plan (title) VALUES ('STEP BY STEP'), ('CONFIDENT') , ('CUSTOM PATH');
 
+DELETE from codearea.demo_class WHERE codearea.demo_class.demo_app_id between 96 and 115;
 
-insert into codearea.slot(appointment) values('2023-01-26T12:00:00.098Z');
-insert into codearea.slot(appointment) values('2023-12-20T20:35:42.098Z');
-insert into codearea.slot(appointment) values('2023-12-23T20:35:42.098Z');
-insert into codearea.slot(appointment) values('2023-12-23T20:35:42.098Z');
-insert into codearea.slot(appointment) values('2023-12-24T11:35:42.098Z');
-insert into codearea.slot(appointment) values('2023-12-25T09:35:42.098Z');
-insert into codearea.slot(appointment) values('2023-12-21T10:35:42.098Z');
-insert into codearea.slot(appointment) values('2023-12-10T18:35:42.098Z');
+insert into codearea.slot(appointment) values('2023-08-04T11:00:00.098Z');
+insert into codearea.slot(appointment) values('2023-08-04T12:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-08-04T13:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-08-04T15:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-08-04T16:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-08-04T17:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-08-04T14:00:42.098Z');
 
+
+select * from codearea.zoom;
+
+DO $$
+DECLARE
+    slot_id INTEGER := 259;
+    teacher_id INTEGER := 1;
+BEGIN
+    WHILE slot_id <= 267 LOOP
+        INSERT INTO codearea.slot_availablity(slot_id, teacher_id, created_at, updated_at)
+        VALUES (slot_id, teacher_id, NOW(), NOW());
+        slot_id := slot_id + 1;
+    END LOOP;
+END $$;
+		
+
+
+SELECT * from codearea.visitors where DATE(created_at) = CURRENT_DATE AND calling_code = '20';
 
 SELECT
   DATE_TRUNC('week', codearea.paid_class.appointment) AS week_start,
@@ -366,7 +390,7 @@ WHERE codearea.paid_class.student_id = 40;
 SELECT DATE(codearea.paid_class.appointment) from codearea.paid_class 
 WHERE codearea.paid_class.appointment BETWEEN '2023-08-01' AND '2023-08-31';
 
-select * from codearea.operation_chapter;
+select * from codearea.course;
 
 
 SELECT codearea.chapter.title as chapter_title , codearea.plan.title as plan_title , codearea.course.name as course_name , codearea.operation.type,
@@ -534,3 +558,15 @@ CREATE TABLE codearea.student_answers(
 );
 
 /* quiz system end*/
+SELECT CURRENT_TIMESTAMP AT TIME ZONE 'Africa/Cairo';
+
+
+  SELECT codearea.paid_class.appointment AT TIME ZONE 'Africa/Cairo'
+    FROM codearea.paid_class where codearea.paid_class.student_id = 70 ORDER BY DATE(codearea.paid_class.appointment);
+	
+	
+  SELECT *
+    FROM codearea.paid_class
+    WHERE codearea.paid_class.appointment AT TIME ZONE 'Africa/Cairo' >=
+    CURRENT_TIMESTAMP AT TIME ZONE 'Africa/Cairo' AND codearea.paid_class.student_id = 70
+    ORDER BY codearea.paid_class.appointment LIMIT 4;

@@ -369,6 +369,10 @@ const CreateNextClassIfNeeded = async (req, res, next) => {
   const student = await models.student.findByPk(parseInt(req.query.id));
   req.body.st_name = student.name;
   req.paid = true;
+  if (!req.classes.length) {
+    res.status(200).json(req.classes);
+    return;
+  }
   next();
 };
 

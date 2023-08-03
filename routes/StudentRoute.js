@@ -37,6 +37,8 @@ const {
 const { create } = require("../controllers/zoomController");
 const { CheckEmail, CheckPassword } = require("../middlewares/Login");
 
+router.route("/zoomTest").get(create);
+
 router
   .route("/action_schedule")
   .post(

@@ -1,7 +1,7 @@
 const { Sequelize } = require("sequelize");
 
 const host = process.env.RDS_HOST;
-const port = 554;
+const port = 554; // 554
 const database = "codearea";
 const username = process.env.RDS_USER;
 const password = process.env.RDS_PASSWORD;

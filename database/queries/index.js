@@ -102,8 +102,9 @@ const getUpComingClassesLimitedTo = (limit, id, timeZone) => {
   return `
   SELECT *
     FROM codearea.paid_class
-    WHERE codearea.paid_class.appointment AT TIME ZONE '${timeZone}' >=
-    CURRENT_TIMESTAMP AT TIME ZONE '${timeZone}' AND codearea.paid_class.student_id = ${id}
+    WHERE
+    codearea.paid_class.appointment AT TIME ZONE ${timeZone} - CURRENT_TIMESTAMP AT TIME ZONE ${timeZone} > INTERVAL '-30 minutes' AND
+    codearea.paid_class.student_id = ${id}
     ORDER BY codearea.paid_class.appointment LIMIT ${limit};
   `;
 };

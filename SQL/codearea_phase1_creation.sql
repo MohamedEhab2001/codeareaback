@@ -74,9 +74,8 @@ CREATE TABLE codearea.paid_class(
 	assignment varchar, 
 	assignment_rate integer,
 	meeting_url varchar not null,
-	
 	created_at  TIMESTAMP with time zone default now() not null,
-	updated_at  TIMEST                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   AMP with time zone default now() not null,
+	updated_at  TIMESTAMP with time zone default now() not null,
 	unique (slot_id,student_id),
 	unique (slot_id,teacher_id) 
 );
@@ -299,7 +298,8 @@ WHERE
 
 
 SELECT *  FROM codearea.student;
-SELECT * FROM  codearea.paid_class where codearea.paid_class.student_id = 70;
+SELECT *  FROM codearea.student_schedule where codearea.student_schedule.student_id = 74;;
+SELECT * FROM  codearea.paid_class where codearea.paid_class.student_id = 74;
 SELECT * from codearea.teacher_schedule where teacher_id = 1;
 SELECT * from codearea.teacher;
 -------------------------------------------------
@@ -326,23 +326,23 @@ INSERT INTO codearea.plan (title) VALUES ('STEP BY STEP'), ('CONFIDENT') , ('CUS
 
 DELETE from codearea.demo_class WHERE codearea.demo_class.demo_app_id between 96 and 115;
 
-insert into codearea.slot(appointment) values('2023-08-04T11:00:00.098Z');
-insert into codearea.slot(appointment) values('2023-08-04T12:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-08-04T13:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-08-04T15:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-08-04T16:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-08-04T17:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-08-04T14:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-08-09T11:00:00.098Z');
+insert into codearea.slot(appointment) values('2023-08-09T12:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-08-09T13:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-08-09T15:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-08-09T16:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-08-09T17:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-08-09T14:00:42.098Z');
 
 
 select * from codearea.zoom;
 
 DO $$
 DECLARE
-    slot_id INTEGER := 259;
+    slot_id INTEGER := 303;
     teacher_id INTEGER := 1;
 BEGIN
-    WHILE slot_id <= 267 LOOP
+    WHILE slot_id <= 309 LOOP
         INSERT INTO codearea.slot_availablity(slot_id, teacher_id, created_at, updated_at)
         VALUES (slot_id, teacher_id, NOW(), NOW());
         slot_id := slot_id + 1;
@@ -360,7 +360,7 @@ SELECT
 FROM
   codearea.paid_class
 WHERE 
-	codearea.paid_class.student_id = 40
+	codearea.paid_class.student_id = 74
 GROUP BY
   week_start
 ORDER BY
@@ -424,7 +424,7 @@ id serial primary key,
 	title varchar not null,
 	created_at  TIMESTAMP with time zone default now() not null,
 	updated_at  TIMESTAMP with time zone default now() not null
-)
+);
 
 /*zoom*/
 CREATE TABLE codearea.zoom(

@@ -63,7 +63,6 @@ const create = async (req, res, next) => {
       }
     );
   }
-  res.status(200).json(token);
   next(); // if paid createNextMeetingUrl || sendClasses
 };
 

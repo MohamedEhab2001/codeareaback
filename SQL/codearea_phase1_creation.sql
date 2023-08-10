@@ -300,7 +300,8 @@ WHERE
 SELECT *  FROM codearea.student;
 SELECT *  FROM codearea.student_schedule where codearea.student_schedule.student_id = 74;;
 SELECT * FROM  codearea.paid_class where codearea.paid_class.student_id = 74;
-SELECT * from codearea.teacher_schedule where teacher_id = 1;
+
+SELECT * from codearea.teacher_schedule where teacher_id = 2;
 SELECT * from codearea.teacher;
 -------------------------------------------------
 SELECT * from codearea.student;
@@ -324,7 +325,6 @@ SELECT * from codearea.visitors;
 
 INSERT INTO codearea.plan (title) VALUES ('STEP BY STEP'), ('CONFIDENT') , ('CUSTOM PATH');
 
-DELETE from codearea.demo_class WHERE codearea.demo_class.demo_app_id between 96 and 115;
 
 insert into codearea.slot(appointment) values('2023-08-09T11:00:00.098Z');
 insert into codearea.slot(appointment) values('2023-08-09T12:00:42.098Z');
@@ -353,18 +353,19 @@ END $$;
 
 SELECT * from codearea.visitors where DATE(created_at) = CURRENT_DATE AND calling_code = '20';
 
-SELECT
-  DATE_TRUNC('week', codearea.paid_class.appointment) AS week_start,
-  AVG(codearea.paid_class.assignment_rate) AS avg_assignment_rate,
-  AVG(codearea.paid_class.st_focus_rate) AS avg_st_focus_rate
-FROM
-  codearea.paid_class
-WHERE 
-	codearea.paid_class.student_id = 74
-GROUP BY
-  week_start
-ORDER BY
-  week_start ASC;
+      SELECT
+      DATE_TRUNC('week', codearea.paid_class.appointment) AS week_start,
+      AVG(codearea.paid_class.assignment_rate) AS avg_assignment_rate,
+      AVG(codearea.paid_class.st_focus_rate) AS avg_st_focus_rate
+      FROM
+      codearea.paid_class
+      WHERE 
+      codearea.paid_class.student_id = 74
+      AND EXTRACT(MONTH FROM DATE_TRUNC('week', codearea.paid_class.appointment)) = EXTRACT(MONTH FROM CURRENT_DATE)
+      GROUP BY
+      week_start
+      ORDER BY
+      week_start ASC;
   
   
 SELECT

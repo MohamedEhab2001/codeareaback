@@ -1,6 +1,6 @@
 const Zoho = require("../helpers/Mail");
 const { default: axios } = require("axios");
-const { DemoTemplate, PayementTemplate } = require("../static");
+const { DemoTemplate, PayementTemplate, TechTemplate } = require("../static");
 const moment = require("moment-timezone");
 
 const prepareDemoMessage = async (req, res, next) => {
@@ -69,8 +69,33 @@ const sendPaymenMail = async (req, res) => {
   res.json({ msg: "done" });
 };
 
+const sendTechMail = async (req, res) => {
+  const zoho = new Zoho();
+  const token = await zoho.TestToken();
+  const redered = TechTemplate({
+    parent_name: req.body.parent_name,
+    updates: req.body.updates,
+  });
+  await axios.post(
+    `https://mail.zoho.com/api/accounts/${process.env.ZOHO_ACCOUNT_ID}/messages`,
+    {
+      fromAddress: "tech@codearea.uk",
+      toAddress: req.body.email_address,
+      subject: "Technical update",
+      content: redered,
+    },
+    {
+      headers: {
+        Authorization: `Zoho-oauthtoken ${token}`,
+      },
+    }
+  );
+  res.json({ msg: "done" });
+};
+
 module.exports = {
   prepareDemoMessage,
   sendDemoMail,
   sendPaymenMail,
+  sendTechMail,
 };

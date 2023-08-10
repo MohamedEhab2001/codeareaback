@@ -3,7 +3,7 @@ require("express-async-errors");
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 const errorHandlerMiddleware = require("./middlewares/errorHandler");
 const notFound = require("./middlewares/notFound");
 const sequelize = require("./database/connect");

@@ -128,14 +128,14 @@ const getTeacherName = (id) => {
 const getRateDataSet = (id) => {
   return `
       SELECT
-      DATE_TRUNC('week', codearea.paid_class.appointment) AS week_start,
+      DATE_TRUNC('day', codearea.paid_class.appointment) AS week_start,
       AVG(codearea.paid_class.assignment_rate) AS avg_assignment_rate,
       AVG(codearea.paid_class.st_focus_rate) AS avg_st_focus_rate
       FROM
       codearea.paid_class
       WHERE 
       codearea.paid_class.student_id = ${id}
-      AND EXTRACT(MONTH FROM DATE_TRUNC('week', codearea.paid_class.appointment)) = EXTRACT(MONTH FROM CURRENT_DATE)
+      AND EXTRACT(MONTH FROM DATE_TRUNC('month', codearea.paid_class.appointment)) = EXTRACT(MONTH FROM CURRENT_DATE)
       GROUP BY
       week_start
       ORDER BY

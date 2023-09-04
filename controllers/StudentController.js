@@ -61,6 +61,7 @@ const GetStudentIdFromParentEmail = async (req, res, next) => {
       type: QueryTypes.SELECT,
     }
   );
+  console.log(student);
   req.student_id = student.id;
   req.payment = { payedChapters, plan, type, amount };
   next();

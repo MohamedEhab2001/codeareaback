@@ -14,7 +14,7 @@ const createPaymentSession = async (req, res) => {
     mode: "payment",
     line_items,
     customer_email,
-    success_url: `${domainURL}success/session_id={CHECKOUT_SESSION_ID}?token=${token}`,
+    success_url: `${domainURL}success?session_id={CHECKOUT_SESSION_ID}?token=${token}`,
     cancel_url: `${domainURL}cancel`,
   });
   res.status(201).json(session);

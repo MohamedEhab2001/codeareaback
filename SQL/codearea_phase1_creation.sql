@@ -288,18 +288,18 @@ SELECT DISTINCT date_trunc('day', codearea.paid_class.appointment) AS appointmen
 FROM codearea.paid_class
 ORDER BY appointment_date;
 
-SELECT codearea.paid_class.id , codearea.paid_class.canceled FROM codearea.paid_class
+SELECT * FROM codearea.paid_class
 WHERE
-  codearea.paid_class.student_id = 40
-  AND EXTRACT(MONTH FROM appointment) = 7 
-  AND EXTRACT(DAY FROM appointment) = 10
-  AND EXTRACT(YEAR FROM appointment) = 2022;
+  codearea.paid_class.student_id = 74
+  AND EXTRACT(MONTH FROM appointment) = 8
+  AND EXTRACT(DAY FROM appointment) = 24
+  AND EXTRACT(YEAR FROM appointment) = 2023;
 
 
 
 SELECT *  FROM codearea.student;
 SELECT *  FROM codearea.student_schedule where codearea.student_schedule.student_id = 74;;
-SELECT * FROM  codearea.paid_class where codearea.paid_class.student_id = 74;
+SELECT * FROM  codearea.paid_class where codearea.paid_class.student_id = 70;
 
 SELECT * from codearea.teacher_schedule where teacher_id = 2;
 SELECT * from codearea.teacher;
@@ -326,23 +326,23 @@ SELECT * from codearea.visitors;
 INSERT INTO codearea.plan (title) VALUES ('STEP BY STEP'), ('CONFIDENT') , ('CUSTOM PATH');
 
 
-insert into codearea.slot(appointment) values('2023-08-09T11:00:00.098Z');
-insert into codearea.slot(appointment) values('2023-08-09T12:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-08-09T13:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-08-09T15:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-08-09T16:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-08-09T17:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-08-09T14:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-09-04T11:00:00.098Z');
+insert into codearea.slot(appointment) values('2023-09-04T12:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-09-04T13:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-09-04T15:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-09-04T16:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-09-04T17:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-09-04T14:00:42.098Z');
 
 
 select * from codearea.zoom;
 
 DO $$
 DECLARE
-    slot_id INTEGER := 303;
+    slot_id INTEGER := 457;
     teacher_id INTEGER := 1;
 BEGIN
-    WHILE slot_id <= 309 LOOP
+    WHILE slot_id <= 463 LOOP
         INSERT INTO codearea.slot_availablity(slot_id, teacher_id, created_at, updated_at)
         VALUES (slot_id, teacher_id, NOW(), NOW());
         slot_id := slot_id + 1;
@@ -354,14 +354,14 @@ END $$;
 SELECT * from codearea.visitors where DATE(created_at) = CURRENT_DATE AND calling_code = '20';
 
       SELECT
-      DATE_TRUNC('week', codearea.paid_class.appointment) AS week_start,
+      DATE_TRUNC('day', codearea.paid_class.appointment) AS week_start,
       AVG(codearea.paid_class.assignment_rate) AS avg_assignment_rate,
       AVG(codearea.paid_class.st_focus_rate) AS avg_st_focus_rate
       FROM
       codearea.paid_class
       WHERE 
       codearea.paid_class.student_id = 74
-      AND EXTRACT(MONTH FROM DATE_TRUNC('week', codearea.paid_class.appointment)) = EXTRACT(MONTH FROM CURRENT_DATE)
+      AND EXTRACT(MONTH FROM DATE_TRUNC('month', codearea.paid_class.appointment)) = EXTRACT(MONTH FROM CURRENT_DATE)
       GROUP BY
       week_start
       ORDER BY

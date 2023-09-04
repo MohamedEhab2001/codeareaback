@@ -14,4 +14,13 @@ const TechTemplate = ejs.compile(
   fs.readFileSync(path.resolve(__dirname, "tech.html"), "utf8")
 );
 
-module.exports = { DemoTemplate, PayementTemplate, TechTemplate };
+const RenewTemplate = ejs.compile(
+  fs.readFileSync(path.resolve(__dirname, "renew.html"), "utf8")
+);
+
+module.exports = {
+  DemoTemplate,
+  PayementTemplate,
+  TechTemplate,
+  RenewTemplate,
+};

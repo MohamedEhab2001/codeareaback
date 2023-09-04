@@ -103,7 +103,7 @@ const getUpComingClassesLimitedTo = (limit, id, timeZone) => {
   SELECT *
     FROM codearea.paid_class
     WHERE
-    codearea.paid_class.appointment AT TIME ZONE ${timeZone} - CURRENT_TIMESTAMP AT TIME ZONE ${timeZone} > INTERVAL '-30 minutes' AND
+    codearea.paid_class.appointment AT TIME ZONE '${timeZone}' - CURRENT_TIMESTAMP AT TIME ZONE '${timeZone}' > INTERVAL '-30 minutes' AND
     codearea.paid_class.student_id = ${id}
     ORDER BY codearea.paid_class.appointment LIMIT ${limit};
   `;
@@ -168,7 +168,11 @@ const SearchInClasses = (data) => {
       ? `AND DATE(codearea.paid_class.appointment)  BETWEEN '${data.from}' AND '${data.to}'`
       : ""
   }
-  ${data.sort ? `ORDER BY codearea.paid_class.appointment ${data.sort}` : ""}
+  ${
+    data.sort
+      ? `ORDER BY codearea.paid_class.appointment ${data.sort}`
+      : "ORDER BY codearea.paid_class.appointment DESC"
+  }
   ${data.limit ? `LIMIT ${data.limit}` : ""}
   ;
   `;

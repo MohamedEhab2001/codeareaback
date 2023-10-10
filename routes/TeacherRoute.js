@@ -8,16 +8,21 @@ const {
   deleteTeacher,
   createTeacherSchedule,
   loginTeacher,
+  getTeachers,
+  getTeacherClasses
 } = require("../controllers/TeacherController");
 const {
   CheckTeacherEmail,
   CheckTeacherPassword,
 } = require("../middlewares/Login");
 
-router.route("/").post(createTeacher);
+router.route("/").post(createTeacher).get(getTeachers);
 router
-  .route("/login")
-  .post(CheckTeacherEmail, CheckTeacherPassword, loginTeacher);
+.route("/login")
+.post(CheckTeacherEmail, CheckTeacherPassword, loginTeacher);
+
+router.route("/classes/:id").get(getTeacherClasses);
+
 router
   .route("/:id")
   .get(getTeacherById)

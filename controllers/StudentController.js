@@ -15,6 +15,7 @@ const {
   checkIfThereIsPaid,
   SearchInClasses,
   getStudentOperations,
+  checkIfThereIsPaidTeacher,
 } = require("../database/queries");
 const { QueryTypes } = require("sequelize");
 const { makeid } = require("../helpers/Methods");
@@ -421,12 +422,27 @@ const cancelPaidClass = async (req, res) => {
 
 const ReSchedulePaidClass = async (req, res) => {
   const { id } = req.params;
-  const { time, paid_id } = req.body;
-  const date = new Date(time);
+  const { time, paid_id, teacher_id } = req.body;
+  const timeWithOffset = time + "UTC";
+  const date = new Date(timeWithOffset);
   const day = date.getDate();
   const year = date.getFullYear();
+  const hour = date.getHours();
   const month = date.getMonth() + 1;
   date.setMinutes("0");
+
+  const student = await models.student.findByPk(id);
+  const isTherePaidTeacher = await sequalize.query(
+    checkIfThereIsPaidTeacher(day, month, year, student.teacher_id, hour),
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
+
+  if (isTherePaidTeacher.length) {
+    throw new badRequest("Teacher have a class in this appointment");
+  }
+
   const isTherePaid = await sequalize.query(
     checkIfThereIsPaid(day, month, year, id),
     {
@@ -468,6 +484,34 @@ const studentOperations = async (req, res) => {
   res.status(200).json(operations);
 };
 
+const submitFeedback = async (req, res) => {
+  const {
+    paid_id,
+    lesson_id,
+    st_focus_rate,
+    assignment_rate,
+    comment,
+    custom_assignment,
+    assignment,
+  } = req.body;
+  await models.paid_class.update(
+    {
+      lesson_id,
+      st_focus_rate,
+      assignment_rate,
+      comment,
+      custom_assignment,
+      assignment,
+    },
+    {
+      where: {
+        id: paid_id,
+      },
+    }
+  );
+  res.status(200).json({ msg: "Feedback submitted" });
+};
+
 module.exports = {
   createStudent,
   GetStudentIdFromParentEmail,
@@ -500,4 +544,5 @@ module.exports = {
   searchPaidClasses,
   studentOperations,
   updateStudent,
+  submitFeedback,
 };

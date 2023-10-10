@@ -30,6 +30,7 @@ const {
   searchPaidClasses,
   studentOperations,
   updateStudent,
+  submitFeedback,
 } = require("../controllers/StudentController");
 const {
   changeTeacherSlotAvailability,
@@ -96,6 +97,7 @@ router
 router.route("/login").post(CheckEmail, CheckPassword, loginUser);
 router.route("/schedule/:id").get(CheckStudentSchedule);
 router.route("/teacher/schedule").get(getStudentTeacherSlots);
+router.route("/submit/class_feedback").put(submitFeedback);
 router.route("/:id").get(StudentById).put(updateStudent);
 
 module.exports = router;

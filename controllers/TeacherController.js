@@ -1,6 +1,19 @@
+const { QueryTypes } = require("sequelize");
+const sequelize = require("../database/connect");
 const { models } = require("../database/connect");
+const {
+  getTeacherPaidClasses,
+  getTeacherDemoClasses,
+} = require("../database/queries");
 const { ModelKeysValidate } = require("../helpers/Validation");
 const jwt = require("jsonwebtoken");
+
+const getTeachers = async (req, res) => {
+  const teachers = await models.teacher.findAll({
+    attributes: ["id", "name"],
+  });
+  res.status(200).json({ teachers });
+};
 
 const getTeacherById = async (req, res) => {
   const { id } = req.params;
@@ -10,6 +23,22 @@ const getTeacherById = async (req, res) => {
     },
   });
   res.status(200).json({ teacher });
+};
+
+const getTeacherClasses = async (req, res) => {
+  const { id } = req.params;
+  const { date } = req.query;
+  const newDate = new Date();
+  const day = date
+    ? date
+    : `${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`;
+  const paid = await sequelize.query(getTeacherPaidClasses(id, day), {
+    type: QueryTypes.SELECT,
+  });
+  const demo = await sequelize.query(getTeacherDemoClasses(id, day), {
+    type: QueryTypes.SELECT,
+  });
+  res.status(200).json({ paid, demo });
 };
 
 const loginTeacher = (req, res) => {
@@ -106,4 +135,6 @@ module.exports = {
   createTeacherSchedule,
   changeTeacherSlotAvailability,
   loginTeacher,
+  getTeachers,
+  getTeacherClasses,
 };

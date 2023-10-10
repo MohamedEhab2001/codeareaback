@@ -10,6 +10,25 @@ const getChapter = async (req, res) => {
   res.status(200).json({ chapters });
 };
 
+const getChapters = async (req, res) => {
+  const chapters = await models.chapter.findAll({
+    attributes: ["id", "title"],
+  });
+  res.status(200).json({ chapters });
+};
+
+const getLessonsByChapterId = async (req, res) => {
+  const lessons = await models.lesson.findAll({
+    attributes : ["id" , "title"] ,
+    where: {
+      chapter_id: req.params.id,
+    },
+  });
+  res.status(200).json({ lessons });
+};
+
 module.exports = {
   getChapter,
+  getChapters,
+  getLessonsByChapterId,
 };

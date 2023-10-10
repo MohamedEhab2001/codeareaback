@@ -143,7 +143,7 @@ const getRateDataSet = (id) => {
   `;
 };
 
-const checkIfThereIsPaid = (day, month, year, id, sort, limit) => {
+const checkIfThereIsPaid = (day, month, year, id) => {
   return `
         SELECT codearea.paid_class.id , codearea.paid_class.canceled FROM codearea.paid_class
         WHERE
@@ -153,10 +153,21 @@ const checkIfThereIsPaid = (day, month, year, id, sort, limit) => {
         AND EXTRACT(YEAR FROM appointment) = ${year};`;
 };
 
+const checkIfThereIsPaidTeacher = (day, month, year, id, hour) => {
+  return `
+        SELECT codearea.paid_class.id , codearea.paid_class.canceled FROM codearea.paid_class
+        WHERE
+        codearea.paid_class.teacher_id = ${id}
+        AND EXTRACT(MONTH FROM appointment) = ${month}
+        AND EXTRACT(HOUR FROM appointment) = ${hour}
+        AND EXTRACT(DAY FROM appointment) = ${day}
+        AND EXTRACT(YEAR FROM appointment) = ${year};`;
+};
+
 const SearchInClasses = (data) => {
   return `
   SELECT codearea.lesson.title as lesson_title, codearea.lesson.cover_url ,codearea.lesson.assignment_url, codearea.lesson.material_url,
-  codearea.lesson.quiz_url, codearea.paid_class.appointment ,codearea.paid_class.st_focus_rate, codearea.paid_class.comment,
+  codearea.lesson.quiz_url, codearea.paid_class.assignment , codearea.paid_class.appointment ,codearea.paid_class.st_focus_rate, codearea.paid_class.comment,
   codearea.paid_class.custom_assignment, codearea.paid_class.assignment_rate , codearea.paid_class.id , codearea.paid_class.meeting_url
   , codearea.paid_class.canceled
   FROM codearea.paid_class
@@ -193,6 +204,26 @@ const getStudentOperations = (id) => {
   `;
 };
 
+const getTeacherPaidClasses = (id, date) => {
+  return `
+  Select pc.id, pc.appointment , pc.canceled , pc.ptm , st.name from codearea.paid_class pc 
+  inner join codearea.teacher te on pc.teacher_id = te.id
+  inner join codearea.student st on pc.student_id = st.id
+  where pc.teacher_id = ${id} and DATE(pc.appointment) = '${date}';
+  `;
+};
+
+const getTeacherDemoClasses = (id, date) => {
+  return `
+  Select dm.id, da.st_name as name , sl.appointment , da.parent_phone , da.country ,
+  da.st_age as age , da.parent_name , da.st_gender as gender from codearea.demo_class dm
+  inner join codearea.teacher te on dm.teacher_id = te.id
+  inner join codearea.demo_app da on dm.demo_app_id = da.id
+  inner join codearea.slot sl on da.slot_id = sl.id
+  where dm.teacher_id = ${id} and DATE(sl.appointment) = '${date}';
+  `;
+};
+
 module.exports = {
   slot_availabilty_count,
   Teacher_id,
@@ -214,4 +245,7 @@ module.exports = {
   checkIfThereIsPaid,
   SearchInClasses,
   getStudentOperations,
+  getTeacherPaidClasses,
+  checkIfThereIsPaidTeacher,
+  getTeacherDemoClasses,
 };

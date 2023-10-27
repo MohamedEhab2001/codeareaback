@@ -326,23 +326,23 @@ SELECT * from codearea.visitors;
 INSERT INTO codearea.plan (title) VALUES ('STEP BY STEP'), ('CONFIDENT') , ('CUSTOM PATH');
 
 
-insert into codearea.slot(appointment) values('2023-09-04T11:00:00.098Z');
-insert into codearea.slot(appointment) values('2023-09-04T12:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-09-04T13:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-09-04T15:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-09-04T16:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-09-04T17:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-09-04T14:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-10-31T11:00:00.098Z');
+insert into codearea.slot(appointment) values('2023-10-31T12:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-10-31T13:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-10-31T15:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-10-31T16:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-10-31T17:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-10-31T14:00:42.098Z');
 
 
 select * from codearea.zoom;
 
 DO $$
 DECLARE
-    slot_id INTEGER := 457;
+    slot_id INTEGER := 709;
     teacher_id INTEGER := 1;
 BEGIN
-    WHILE slot_id <= 463 LOOP
+    WHILE slot_id <= 743 LOOP
         INSERT INTO codearea.slot_availablity(slot_id, teacher_id, created_at, updated_at)
         VALUES (slot_id, teacher_id, NOW(), NOW());
         slot_id := slot_id + 1;
@@ -351,7 +351,7 @@ END $$;
 		
 
 
-SELECT * from codearea.visitors where DATE(created_at) = CURRENT_DATE AND calling_code = '20';
+SELECT * from codearea.visitors where DATE(created_at) = '2023-10-11' AND language_code = 'ar';
 
       SELECT
       DATE_TRUNC('day', codearea.paid_class.appointment) AS week_start,

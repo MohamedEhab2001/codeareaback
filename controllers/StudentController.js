@@ -305,6 +305,7 @@ const CreateClasses = async (req, _, next) => {
   const toLoop = 1300;
   const numberIsEqualTo = req.numberOfClasses;
   const Schedule = [...req.SelectedTeacherSchedule];
+  console.log(numberIsEqualTo);
 
   let ClassesTiming = [];
   for (let i = 0; i < toLoop; i++) {
@@ -318,6 +319,7 @@ const CreateClasses = async (req, _, next) => {
     const target = Schedule.find(
       (schedule) => schedule.day === dayOfWeekNumber
     );
+    console.log(target);
     if (target) {
       inDate.setHours(target.time.split(":")[0]);
       inDate.setMinutes(target.time.split(":")[1]);

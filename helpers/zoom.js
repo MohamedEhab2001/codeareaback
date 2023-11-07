@@ -32,6 +32,7 @@ class Zoom {
     const autCode = buffer
       .from(`${process.env.ZOOM_CLIENT_ID}:${process.env.ZOOM_SECRET}`)
       .toString("base64");
+
     try {
       const response = await axios.post(base, undefined, {
         params: {

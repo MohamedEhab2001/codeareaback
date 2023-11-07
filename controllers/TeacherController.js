@@ -98,6 +98,7 @@ const deleteTeacher = async (req, res) => {
 };
 
 const changeTeacherSlotAvailability = async (req, res) => {
+
   const { SelectedTeacherSchedule } = req;
 
   if (req.deleteingJourney) {

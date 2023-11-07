@@ -290,9 +290,9 @@ ORDER BY appointment_date;
 
 SELECT * FROM codearea.paid_class
 WHERE
-  codearea.paid_class.student_id = 70
+  codearea.paid_class.student_id = 74
   AND EXTRACT(MONTH FROM appointment) = 10
-  AND EXTRACT(DAY FROM appointment) = 7
+  AND EXTRACT(DAY FROM appointment) = 26
   AND EXTRACT(YEAR FROM appointment) = 2023;
 
 
@@ -310,13 +310,13 @@ SELECT * from codearea.operation_chapter;
 insert into codearea.operation_chapter(operation_id , chapter_id) values (46 , 3)
 SELECT * from codearea.plan;
 SELECT * from codearea.chapter;
-SELECT * from codearea.lesson l where l.chapter_id = 9;
+SELECT * from codearea.lesson l where l.chapter_id = 3;
 SELECT * from codearea.course;
 SELECT * from codearea.plan;
 -- mena and salma password changed
 SELECT * from codearea.student ORDER BY codearea.student.id ASC;
 SELECT * from codearea.demo_app;
-SELECT * from codearea.demo_app where DATE(created_at) = CURRENT_DATE  ORDER BY codearea.demo_app.id ASC ;
+SELECT * from codearea.demo_app where DATE(created_at) = CURRENT_DATE  ORDER BY codearea.demo_app.id DESC ;
 SELECT * from codearea.demo_class;
 SELECT * from codearea.slot ORDER BY codearea.slot.id DESC;
 SELECT * from codearea.slot where DATE(created_at) = CURRENT_DATE  ORDER BY codearea.slot.id ASC
@@ -351,7 +351,7 @@ END $$;
 		
 
 
-SELECT * from codearea.visitors where DATE(created_at) = '2023-10-11' AND language_code = 'ar';
+SELECT * from codearea.visitors where DATE(created_at) = '2023-10-28' AND language_code = 'ar';
 
       SELECT
       DATE_TRUNC('day', codearea.paid_class.appointment) AS week_start,

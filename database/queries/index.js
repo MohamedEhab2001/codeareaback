@@ -191,37 +191,38 @@ const SearchInClasses = (data) => {
 
 const getStudentOperations = (id) => {
   return `
-        SELECT 
-        string_agg(DISTINCT codearea.chapter.title, ', ') as courseName,
-        codearea.plan.title as planTitle,
-        codearea.operation.type,
-        codearea.operation.amount,
-        codearea.operation.status,
-        codearea.operation.end_date as endDate
-      FROM 
-        codearea.operation_chapter
-      INNER JOIN 
-        codearea.operation 
-        ON codearea.operation_chapter.operation_id = codearea.operation.id
-      INNER JOIN 
-        codearea.chapter 
-        ON codearea.operation_chapter.chapter_id = codearea.chapter.id
-      INNER JOIN 
-        codearea.plan 
-        ON codearea.operation.plan = codearea.plan.id
-      INNER JOIN 
-        codearea.course 
-        ON codearea.chapter.course_id = codearea.course.id
-      WHERE 
-        codearea.operation.student_id = ${id}
-      GROUP BY 
-        codearea.plan.title,
-        codearea.operation.type,
-        codearea.operation.amount,
-        codearea.operation.status,
-        codearea.operation.end_date,
-        codearea.operation.created_at
-        ORDER BY codearea.operation.created_at DESC;
+  SELECT 
+  string_agg(DISTINCT codearea.chapter.title, ', ') as chaptertitle,
+  string_agg(DISTINCT codearea.course.name, ', ') as coursename,
+  codearea.plan.title as planTitle,
+  codearea.operation.type,
+  codearea.operation.amount,
+  codearea.operation.status,
+  codearea.operation.end_date as endDate
+FROM 
+  codearea.operation_chapter
+INNER JOIN 
+  codearea.operation 
+  ON codearea.operation_chapter.operation_id = codearea.operation.id
+INNER JOIN 
+  codearea.chapter 
+  ON codearea.operation_chapter.chapter_id = codearea.chapter.id
+INNER JOIN 
+  codearea.plan 
+  ON codearea.operation.plan = codearea.plan.id
+INNER JOIN 
+  codearea.course 
+  ON codearea.chapter.course_id = codearea.course.id
+WHERE 
+  codearea.operation.student_id = ${id}
+GROUP BY 
+  codearea.plan.title,
+  codearea.operation.type,
+  codearea.operation.amount,
+  codearea.operation.status,
+  codearea.operation.end_date,
+codearea.operation.created_at
+ORDER BY codearea.operation.created_at DESC;
   `;
 };
 

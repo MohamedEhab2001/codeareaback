@@ -219,7 +219,7 @@ const getStudentOperations = (id) => {
         codearea.operation.type,
         codearea.operation.amount,
         codearea.operation.status,
-        codearea.operation.end_date
+        codearea.operation.end_date,
         codearea.operation.created_at
         ORDER BY codearea.operation.created_at DESC;
   `;

@@ -45,9 +45,7 @@ const loginTeacher = (req, res) => {
   req.teacher["password"] = "";
   const token = jwt.sign(
     {
-      student: {
-        ...req.teacher.dataValues,
-      },
+      ...req.teacher.dataValues,
     },
     process.env.JWT_SECRET,
     {
@@ -98,7 +96,6 @@ const deleteTeacher = async (req, res) => {
 };
 
 const changeTeacherSlotAvailability = async (req, res) => {
-
   const { SelectedTeacherSchedule } = req;
 
   if (req.deleteingJourney) {

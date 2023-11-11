@@ -290,34 +290,36 @@ ORDER BY appointment_date;
 
 SELECT * FROM codearea.paid_class
 WHERE
-  codearea.paid_class.student_id = 74
-  AND EXTRACT(MONTH FROM appointment) = 10
-  AND EXTRACT(DAY FROM appointment) = 26
+  codearea.paid_class.student_id = 70
+  AND EXTRACT(MONTH FROM appointment) = 11
+  AND EXTRACT(DAY FROM appointment) = 04
   AND EXTRACT(YEAR FROM appointment) = 2023;
 
 
 
 SELECT *  FROM codearea.student;
-SELECT *  FROM codearea.student_schedule where codearea.student_schedule.student_id = 74;;
-SELECT * FROM  codearea.paid_class where codearea.paid_class.student_id = 70;
+SELECT *  FROM codearea.student_schedule where codearea.student_schedule.student_id = 85;
+SELECT * FROM  codearea.paid_class where codearea.paid_class.student_id = 85;
 
-SELECT * from codearea.teacher_schedule where teacher_id = 2;
+SELECT * from codearea.teacher_schedule where teacher_id = 5;
 SELECT * from codearea.teacher;
 -------------------------------------------------
 SELECT * from codearea.student;
 SELECT * from codearea.operation;
 SELECT * from codearea.operation_chapter;
-insert into codearea.operation_chapter(operation_id , chapter_id) values (46 , 3)
+insert into codearea.operation_chapter(operation_id , chapter_id) values (56 , 4);
+insert into codearea.operation_chapter(operation_id , chapter_id) values (56 , 5);
+insert into codearea.operation_chapter(operation_id , chapter_id) values (56 , 6);
 SELECT * from codearea.plan;
 SELECT * from codearea.chapter;
 SELECT * from codearea.lesson l where l.chapter_id = 3;
 SELECT * from codearea.course;
 SELECT * from codearea.plan;
 -- mena and salma password changed
-SELECT * from codearea.student ORDER BY codearea.student.id ASC;
+SELECT * from codearea.student ORDER BY codearea.student.id DESC;
 SELECT * from codearea.demo_app;
 SELECT * from codearea.demo_app where DATE(created_at) = CURRENT_DATE  ORDER BY codearea.demo_app.id DESC ;
-SELECT * from codearea.demo_class;
+SELECT * from codearea.demo_class cl where cl.number = '4W9b06AI6hDYZqJ';
 SELECT * from codearea.slot ORDER BY codearea.slot.id DESC;
 SELECT * from codearea.slot where DATE(created_at) = CURRENT_DATE  ORDER BY codearea.slot.id ASC
 SELECT * from codearea.slot_availablity where DATE(created_at) = CURRENT_DATE  ORDER BY codearea.slot_availablity.slot_id ASC;
@@ -352,6 +354,9 @@ END $$;
 
 
 SELECT * from codearea.visitors where DATE(created_at) = '2023-10-28' AND language_code = 'ar';
+
+SELECT COUNT(*) from codearea.paid_class pd where DATE(appointment) < CURRENT_DATE AND pd.student_id = 43
+and pd.lesson_id is null;
 
       SELECT
       DATE_TRUNC('day', codearea.paid_class.appointment) AS week_start,
@@ -571,3 +576,4 @@ SELECT CURRENT_TIMESTAMP AT TIME ZONE 'Africa/Cairo';
     WHERE codearea.paid_class.appointment AT TIME ZONE 'Africa/Cairo' >=
     CURRENT_TIMESTAMP AT TIME ZONE 'Africa/Cairo' AND codearea.paid_class.student_id = 70
     ORDER BY codearea.paid_class.appointment LIMIT 4;
+

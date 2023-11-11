@@ -19,7 +19,14 @@ const getChapters = async (req, res) => {
 
 const getLessonsByChapterId = async (req, res) => {
   const lessons = await models.lesson.findAll({
-    attributes : ["id" , "title"] ,
+    attributes: [
+      "id",
+      "title",
+      "cover_url",
+      "quiz_url",
+      "material_url",
+      "assignment_url",
+    ],
     where: {
       chapter_id: req.params.id,
     },

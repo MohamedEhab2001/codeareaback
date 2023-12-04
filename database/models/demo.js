@@ -37,6 +37,10 @@ module.exports = () => {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      ref_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
     },
     {
       tableName: "demo_app",

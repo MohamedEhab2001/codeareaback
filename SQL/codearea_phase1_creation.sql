@@ -11,7 +11,7 @@ CREATE TABLE codearea.demo_app(
 	created_at TIMESTAMP with time zone default now() not null,
 	updated_at  TIMESTAMP with time zone default now() not null
 );
-
+Alter table codearea.demo_app add column ref_id integer references codearea.referal_person(id);
 
 /* slot */
 CREATE TABLE codearea.slot(
@@ -21,6 +21,19 @@ CREATE TABLE codearea.slot(
 	updated_at  TIMESTAMP with time zone default now() not null
 );
 
+
+/* slot */
+CREATE TABLE codearea.referal_person(
+	id SERIAL PRIMARY KEY,
+	name varchar not null,
+	created_at  TIMESTAMP with time zone default now() not null,
+	updated_at  TIMESTAMP with time zone default now() not null
+);
+Alter table codearea.referal_person add column phone varchar not null;
+Alter table codearea.referal_person add column email varchar not null;
+
+insert into codearea.referal_person(name , phone , email) values('Mohamed Ehab' , '01027708044' , 'mohamedehab567t@gmail.com');
+select * from codearea.referal_person;
 
 /*slot*/
 
@@ -291,7 +304,7 @@ ORDER BY appointment_date;
 SELECT * FROM codearea.paid_class
 WHERE
   codearea.paid_class.student_id = 70
-  AND EXTRACT(MONTH FROM appointment) = 11
+  AND EXTRACT(MONTH FROM appointment) = 12
   AND EXTRACT(DAY FROM appointment) = 04
   AND EXTRACT(YEAR FROM appointment) = 2023;
 
@@ -312,7 +325,7 @@ insert into codearea.operation_chapter(operation_id , chapter_id) values (56 , 5
 insert into codearea.operation_chapter(operation_id , chapter_id) values (56 , 6);
 SELECT * from codearea.plan;
 SELECT * from codearea.chapter;
-SELECT * from codearea.lesson l where l.chapter_id = 3;
+SELECT * from codearea.lesson l where l.chapter_id = 4;
 SELECT * from codearea.course;
 SELECT * from codearea.plan;
 -- mena and salma password changed
@@ -328,23 +341,26 @@ SELECT * from codearea.visitors;
 INSERT INTO codearea.plan (title) VALUES ('STEP BY STEP'), ('CONFIDENT') , ('CUSTOM PATH');
 
 
-insert into codearea.slot(appointment) values('2023-10-31T11:00:00.098Z');
-insert into codearea.slot(appointment) values('2023-10-31T12:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-10-31T13:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-10-31T15:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-10-31T16:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-10-31T17:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-10-31T14:00:42.098Z');
+SELECT COUNT(*) from codearea.paid_class where teacher_id = 5 and lesson_id is not null;
+
+
+insert into codearea.slot(appointment) values('2023-12-05T11:00:00.098Z');
+insert into codearea.slot(appointment) values('2023-12-05T12:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-12-05T13:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-12-05T15:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-12-05T16:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-12-05T17:00:42.098Z');
+insert into codearea.slot(appointment) values('2023-12-05T14:00:42.098Z');
 
 
 select * from codearea.zoom;
 
 DO $$
 DECLARE
-    slot_id INTEGER := 709;
+    slot_id INTEGER := 794;
     teacher_id INTEGER := 1;
 BEGIN
-    WHILE slot_id <= 743 LOOP
+    WHILE slot_id <= 800 LOOP
         INSERT INTO codearea.slot_availablity(slot_id, teacher_id, created_at, updated_at)
         VALUES (slot_id, teacher_id, NOW(), NOW());
         slot_id := slot_id + 1;

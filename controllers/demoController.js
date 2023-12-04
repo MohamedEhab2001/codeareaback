@@ -8,6 +8,8 @@ const sequalize = require("../database/connect");
 const { QueryTypes } = require("sequelize");
 const { makeid } = require("../helpers/Methods");
 const { notFound } = require("../errors");
+const jwt = require("jsonwebtoken");
+
 const addDemo = async (req, res, next) => {
   const newDemo = await models.demoApp.create(req.body);
   req.demo = newDemo;
@@ -59,9 +61,35 @@ const getDemoBynumber = async (req, res) => {
   res.status(200).json({ demo: demo[0] });
 };
 
+const createRefralLink = async (req, res) => {
+  const { person_id } = req.params;
+  const person = await models.referal_person.findByPk(person_id);
+  if (!person) {
+    throw new notFound(
+      "No One found",
+      "please make sure that you wrote the correct ID"
+    );
+  }
+
+  const token = jwt.sign(
+    {
+      person: {
+        ...person.dataValues,
+      },
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "10d",
+    }
+  );
+
+  res.status(200).json({ token });
+};
+
 module.exports = {
   addDemo,
   afterDemoRegistration,
   createDemoClass,
   getDemoBynumber,
+  createRefralLink,
 };

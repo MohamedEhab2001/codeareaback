@@ -4,6 +4,7 @@ const {
   afterDemoRegistration,
   createDemoClass,
   getDemoBynumber,
+  createRefralLink,
 } = require("../controllers/demoController");
 const { sendDemoMail } = require("../controllers/mailController");
 const { create } = require("../controllers/zoomController");
@@ -19,4 +20,5 @@ router
     sendDemoMail
   );
 router.route("/:num").get(getDemoBynumber);
+router.route("/referal/:person_id").post(createRefralLink);
 module.exports = router;

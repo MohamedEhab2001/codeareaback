@@ -303,16 +303,16 @@ ORDER BY appointment_date;
 
 SELECT * FROM codearea.paid_class
 WHERE
-  codearea.paid_class.student_id = 70
-  AND EXTRACT(MONTH FROM appointment) = 12
-  AND EXTRACT(DAY FROM appointment) = 04
-  AND EXTRACT(YEAR FROM appointment) = 2023;
+  codearea.paid_class.student_id = 74
+  AND EXTRACT(MONTH FROM appointment) = 01
+  AND EXTRACT(DAY FROM appointment) = 01
+  AND EXTRACT(YEAR FROM appointment) = 2024;
 
 
 
 SELECT *  FROM codearea.student;
 SELECT *  FROM codearea.student_schedule where codearea.student_schedule.student_id = 85;
-SELECT * FROM  codearea.paid_class where codearea.paid_class.student_id = 85;
+;
 
 SELECT * from codearea.teacher_schedule where teacher_id = 5;
 SELECT * from codearea.teacher;
@@ -341,7 +341,7 @@ SELECT * from codearea.visitors;
 INSERT INTO codearea.plan (title) VALUES ('STEP BY STEP'), ('CONFIDENT') , ('CUSTOM PATH');
 
 
-SELECT COUNT(*) from codearea.paid_class where teacher_id = 5 and lesson_id is not null;
+SELECT * from codearea.paid_class where student_id = 74 order by appointment;
 
 
 insert into codearea.slot(appointment) values('2023-12-05T11:00:00.098Z');

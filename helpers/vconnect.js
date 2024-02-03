@@ -76,7 +76,6 @@ class Vconncet {
       return response.data.data.meeting_id;
     } catch (error) {
       const meetings = await this.ListMeetings();
-      console.log(meetings);
       await this.deleteMeetings(meetings[0].meeting_id);
       return await this.CreateMeeting(title);
     }
@@ -147,6 +146,7 @@ class Vconncet {
       const response = await axios.get(`${this.#Base}/list_meetings/`, {
         headers: { ...this.#headers },
       });
+      console.log(response);
       return response.data.data;
     } catch (error) {
       console.log(error.message);

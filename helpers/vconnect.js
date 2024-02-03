@@ -57,33 +57,35 @@ class Vconncet {
   #AttendeePassword = "120";
 
   /**
-   * 
-   * @param {*} title 
-   * @returns meeting_id 
+   *
+   * @param {*} title
+   * @returns meeting_id
    */
   async CreateMeeting(title) {
+    const body = {
+      title: title,
+      moderator_password: this.#ModeratorPassword,
+      welcome_text: "welcome to the class",
+      meeting_setting: [...this.#Options],
+    };
     try {
-      const body = {
-        title: title,
-        moderator_password: this.#ModeratorPassword,
-        welcome_text: "welcome to the class",
-        meeting_setting: [...this.#Options],
-      };
       const response = await axios.post(`${this.#Base}/create_meeting/`, body, {
         headers: { ...this.#headers },
       });
+
       return response.data.data.meeting_id;
     } catch (error) {
-      console.log(error.message);
-      return new Error(error.message);
+      const meetings = await this.ListMeetings();
+      await this.deleteMeetings(meetings[0].meeting_id);
+      return await this.CreateMeeting(title);
     }
   }
 
   /**
-   * 
-   * @param {*} meeting_id 
-   * @param {*} start_at 
-   * @param {*} title 
+   *
+   * @param {*} meeting_id
+   * @param {*} start_at
+   * @param {*} title
    * @returns session_id
    */
   async MakeItScheduled(meeting_id, start_at, title) {
@@ -105,13 +107,13 @@ class Vconncet {
       return response.data.data.session_id;
     } catch (error) {
       console.log(error.message);
-      return new Error(error.message);
+      throw new Error(error.message);
     }
   }
 
   /**
-   * 
-   * @param {*} session_id 
+   *
+   * @param {*} session_id
    * @returns Meeting Url
    */
   async StartTheMeeting(session_id) {
@@ -132,8 +134,35 @@ class Vconncet {
       return response.data.data.url;
     } catch (error) {
       console.log(error.message);
-      return new Error(error.message);
+      throw new Error(error.message);
     }
+  }
+
+  /**
+   * @returns list of meetings
+   */
+  async ListMeetings() {
+    try {
+      const response = await axios.get(`${this.#Base}/list_meetings/`, {
+        headers: { ...this.#headers },
+      });
+      return response.data.data;
+    } catch (error) {
+      console.log(error.message);
+      throw new Error(error.message);
+    }
+  }
+
+  /**
+   * @param {integer} meeting_id
+   */
+  async deleteMeetings(meeting_id) {
+    await axios.delete(
+      `${this.#Base}/delete_scheduled_meeting/?meeting_id=${meeting_id}`,
+      {
+        headers: { ...this.#headers },
+      }
+    );
   }
 }
 

@@ -1,7 +1,5 @@
-const Zoom = require("../helpers/zoom");
 const Vconnect = require("../helpers/vconnect");
 const { models } = require("../database/connect");
-const { default: axios } = require("axios");
 
 const create = async (req, res, next) => {
   const vconnect = new Vconnect();
@@ -24,7 +22,6 @@ const create = async (req, res, next) => {
     title
   );
   const url = await vconnect.StartTheMeeting(session_id);
-
   req.meeting = {
     start_url: url,
     join_url: url,

@@ -366,7 +366,7 @@ const getClassesData = async (req, res, next) => {
 };
 
 const CreateNextClassIfNeeded = async (req, res, next) => {
-  if (req.classes[0]?.meeting_url || req.classes[0]?.canceled) {
+  if (req.classes[0]?.canceled) {
     res.status(200).json(req.classes);
     return;
   }

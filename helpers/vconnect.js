@@ -76,6 +76,7 @@ class Vconncet {
       return response.data.data.meeting_id;
     } catch (error) {
       const meetings = await this.ListMeetings();
+      console.log(meetings);
       await this.deleteMeetings(meetings[0].meeting_id);
       return await this.CreateMeeting(title);
     }

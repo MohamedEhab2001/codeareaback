@@ -1,4 +1,5 @@
 const { default: axios } = require("axios");
+const { response } = require("express");
 
 class Vconncet {
   #AcceptLanguage = "Accept-Language";
@@ -72,7 +73,6 @@ class Vconncet {
       const response = await axios.post(`${this.#Base}/create_meeting/`, body, {
         headers: { ...this.#headers },
       });
-
       return response.data.data.meeting_id;
     } catch (error) {
       const meetings = await this.ListMeetings();
@@ -157,12 +157,37 @@ class Vconncet {
    * @param {integer} meeting_id
    */
   async deleteMeetings(meeting_id) {
-    await axios.delete(
-      `${this.#Base}/delete_scheduled_meeting/?meeting_id=${meeting_id}`,
-      {
-        headers: { ...this.#headers },
+    try {
+      const resposne = await axios.delete(
+        `${this.#Base}/delete_scheduled_meeting/?meeting_id=${meeting_id}`,
+        {
+          headers: { ...this.#headers },
+        }
+      );
+      if (resposne.data.status_code == 400) {
+        await this.endMeetings(meeting_id);
+        await this.deleteMeetings(meeting_id);
       }
-    );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  /**
+   * @param {integer} meeting_id
+   */
+  async endMeetings(meeting_id) {
+    try {
+      const res = await axios.get(
+        `${this.#Base}/end_meeting/?meeting_id=${meeting_id}`,
+        {
+          headers: { ...this.#headers },
+        }
+      );
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

@@ -146,7 +146,6 @@ class Vconncet {
       const response = await axios.get(`${this.#Base}/list_meetings/`, {
         headers: { ...this.#headers },
       });
-      console.log(response);
       return response.data.data;
     } catch (error) {
       console.log(error.message);

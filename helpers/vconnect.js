@@ -139,6 +139,29 @@ class Vconncet {
   }
 
   /**
+   *
+   * @param {*} session_id
+   * @returns Meeting Url
+   */
+  async JoinMeeting(meetingId, name) {
+    try {
+      const body = {
+        meeting_id: meetingId,
+        fullname: name,
+        password: "120",
+        role: "viewer",
+      };
+      const response = await axios.post(`${this.#Base}/join_meeting/`, body, {
+        headers: { ...this.#headers },
+      });
+      return response.data.data.url;
+    } catch (error) {
+      console.log(error.message);
+      throw new Error(error.message);
+    }
+  }
+
+  /**
    * @returns list of meetings
    */
   async ListMeetings() {

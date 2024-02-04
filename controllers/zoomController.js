@@ -21,7 +21,10 @@ const create = async (req, res, next) => {
     req.paid ? req.classes[0]?.appointment : slot?.appointment,
     title
   );
-  const url = await vconnect.StartTheMeeting(session_id);
+  await vconnect.StartTheMeeting(session_id);
+
+  const url = await vconnect.JoinMeeting(meeting_id, req.body.st_name);
+
   req.meeting = {
     start_url: url,
     join_url: url,

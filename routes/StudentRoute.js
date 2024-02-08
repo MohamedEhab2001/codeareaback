@@ -31,11 +31,12 @@ const {
   studentOperations,
   updateStudent,
   submitFeedback,
+  JoinMeeting,
 } = require("../controllers/StudentController");
 const {
   changeTeacherSlotAvailability,
 } = require("../controllers/TeacherController");
-const { create } = require("../controllers/zoomController");
+const { create } = require("../controllers/meetController");
 const { CheckEmail, CheckPassword } = require("../middlewares/Login");
 
 router.route("/zoomTest").get(create);
@@ -99,5 +100,6 @@ router.route("/schedule/:id").get(CheckStudentSchedule);
 router.route("/teacher/schedule").get(getStudentTeacherSlots);
 router.route("/submit/class_feedback").put(submitFeedback);
 router.route("/:id").get(StudentById).put(updateStudent);
+router.route("/joinMeet").post(JoinMeeting);
 
 module.exports = router;

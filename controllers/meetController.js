@@ -14,21 +14,14 @@ const create = async (req, res, next) => {
   const title = `${req.paid ? "Paid Session" : "Demo Session"} for ${
     req.body.st_name
   }`;
-  const meeting_id = await vconnect.CreateMeeting(title);
 
-  const session_id = await vconnect.MakeItScheduled(
-    meeting_id,
+
+  const { session_id, public_invitation_url } = await vconnect.CreateSession(
+    req.meeting_id,
     req.paid ? req.classes[0]?.appointment : slot?.appointment,
     title
   );
-  await vconnect.StartTheMeeting(session_id);
 
-  const url = await vconnect.JoinMeeting(meeting_id, req.body.st_name);
-
-  req.meeting = {
-    start_url: url,
-    join_url: url,
-  };
   if (!req.paid) {
     req.start = slot?.appointment;
     req.operations = { ...req.operations, createMeeting: "done" };
@@ -36,7 +29,8 @@ const create = async (req, res, next) => {
   if (req.paid) {
     await models.paid_class.update(
       {
-        meeting_url: req.meeting.join_url,
+        meeting_url: public_invitation_url,
+        session_id,
       },
       {
         where: {

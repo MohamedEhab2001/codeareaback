@@ -7,7 +7,7 @@ const {
   createRefralLink,
 } = require("../controllers/demoController");
 const { sendDemoMail } = require("../controllers/mailController");
-const { create } = require("../controllers/zoomController");
+const { create } = require("../controllers/meetController");
 const { createStudent } = require("../controllers/StudentController");
 router
   .route("/")

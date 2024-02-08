@@ -36,6 +36,9 @@ module.exports = () => {
       lesson_id: {
         type: DataTypes.INTEGER,
       },
+      session_id: {
+        type: DataTypes.STRING,
+      },
       st_focus_rate: {
         type: DataTypes.INTEGER,
       },

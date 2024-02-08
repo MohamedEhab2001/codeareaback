@@ -109,6 +109,15 @@ const getUpComingClassesLimitedTo = (limit, id, timeZone) => {
   `;
 };
 
+const getMeetingIdByStudentId = (id) => {
+  return `
+      SELECT rm.meeting_id from codearea.student st inner join 
+      codearea.rooms rm on rm.id = st.room_id
+      where st.id = ${id}
+;
+  `;
+};
+
 const getCurrentPlan = (id) => {
   return `
     SELECT codearea.plan.title from codearea.operation inner join
@@ -228,7 +237,7 @@ ORDER BY codearea.operation.created_at DESC;
 
 const getTeacherPaidClasses = (id, date) => {
   return `
-  Select pc.id, pc.appointment , pc.canceled , pc.ptm , pc.meeting_url , st.name from codearea.paid_class pc 
+  Select pc.id,pc.student_id, pc.appointment , pc.canceled , pc.ptm , pc.meeting_url , st.name from codearea.paid_class pc 
   inner join codearea.teacher te on pc.teacher_id = te.id
   inner join codearea.student st on pc.student_id = st.id
   where pc.teacher_id = ${id} and DATE(pc.appointment) = '${date}';
@@ -270,4 +279,5 @@ module.exports = {
   getTeacherPaidClasses,
   checkIfThereIsPaidTeacher,
   getTeacherDemoClasses,
+  getMeetingIdByStudentId,
 };

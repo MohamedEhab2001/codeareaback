@@ -29,6 +29,11 @@ CREATE TABLE codearea.referal_person(
 	created_at  TIMESTAMP with time zone default now() not null,
 	updated_at  TIMESTAMP with time zone default now() not null
 );
+
+
+
+
+
 Alter table codearea.referal_person add column phone varchar not null;
 Alter table codearea.referal_person add column email varchar not null;
 
@@ -578,6 +583,28 @@ CREATE TABLE codearea.student_answers(
 	created_at  TIMESTAMP with time zone,
 	updated_at  TIMESTAMP with time zone
 );
+CREATE TABLE codearea.rooms(
+	id serial primary key not null,
+	meeting_id varchar not null,
+	title varchar not null,
+	created_at  TIMESTAMP with time zone,
+	updated_at  TIMESTAMP with time zone
+);
+
+INSERT INTO codearea.rooms(meeting_id , title) VALUES
+('bb45ab78-0030-45e1-a1b1-be63bd4324b5','paid 1'),
+('9981e566-da15-4c43-8e89-6ffd8ee8ec87','paid 2');
+
+
+ALTER TABLE codearea.student ADD COLUMN room_id integer REFERENCES codearea.rooms(id);
+ALTER TABLE codearea.paid_class ADD COLUMN session_id varchar;
+
+UPDATE codearea.student set room_id = 1 where codearea.student.paid = true;
+
+SELECT rm.meeting_id from codearea.student st inner join 
+codearea.rooms rm on rm.id = st.room_id
+where st.id = 44
+;
 
 /* quiz system end*/
 SELECT CURRENT_TIMESTAMP AT TIME ZONE 'Africa/Cairo';

@@ -16,12 +16,13 @@ const {
   SearchInClasses,
   getStudentOperations,
   checkIfThereIsPaidTeacher,
+  getMeetingIdByStudentId,
 } = require("../database/queries");
 const { QueryTypes } = require("sequelize");
 const { makeid } = require("../helpers/Methods");
 const jwt = require("jsonwebtoken");
 const { badRequest } = require("../errors");
-
+const Vconncet = require("../helpers/vconnect");
 const createStudent = async (req, res, next) => {
   const password = makeid(10);
   await models.student.create({
@@ -366,13 +367,20 @@ const getClassesData = async (req, res, next) => {
 };
 
 const CreateNextClassIfNeeded = async (req, res, next) => {
-  if (req.classes[0]?.canceled) {
+  if (req.classes[0]?.canceled || req.classes[0].meeting_url) {
     res.status(200).json(req.classes);
     return;
   }
   const student = await models.student.findByPk(parseInt(req.query.id));
+  const meeting = await sequalize.query(
+    getMeetingIdByStudentId(req.query.id),
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
   req.body.st_name = student.name;
   req.paid = true;
+  req.meeting_id = meeting[0].meeting_id;
   if (!req.classes.length) {
     res.status(200).json(req.classes);
     return;
@@ -514,6 +522,28 @@ const submitFeedback = async (req, res) => {
   res.status(200).json({ msg: "Feedback submitted" });
 };
 
+const JoinMeeting = async (req, res) => {
+  const { class_id, moderator, student_id, name } = req.body;
+  const meeting_id = await sequalize.query(
+    getMeetingIdByStudentId(student_id),
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
+  const paid_class = await models.paid_class.findByPk(class_id);
+
+  const vconnect = new Vconncet();
+
+  const url = await vconnect.JoinMeeting(
+    meeting_id[0].meeting_id,
+    name,
+    moderator,
+    paid_class.dataValues.session_id
+  );
+
+  res.status(200).json({ url });
+};
+
 module.exports = {
   createStudent,
   GetStudentIdFromParentEmail,
@@ -547,4 +577,5 @@ module.exports = {
   studentOperations,
   updateStudent,
   submitFeedback,
+  JoinMeeting,
 };

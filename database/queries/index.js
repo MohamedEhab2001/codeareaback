@@ -237,7 +237,7 @@ ORDER BY codearea.operation.created_at DESC;
 
 const getTeacherPaidClasses = (id, date) => {
   return `
-  Select pc.id,pc.student_id, pc.appointment , pc.canceled , pc.ptm , pc.meeting_url , st.name from codearea.paid_class pc 
+  Select pc.id,pc.student_id, pc.lesson_id,pc.appointment , pc.canceled , pc.ptm , pc.meeting_url , st.name from codearea.paid_class pc 
   inner join codearea.teacher te on pc.teacher_id = te.id
   inner join codearea.student st on pc.student_id = st.id
   where pc.teacher_id = ${id} and DATE(pc.appointment) = '${date}';

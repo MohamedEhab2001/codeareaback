@@ -35,7 +35,7 @@ class Vconncet {
       );
       return response.data.data;
     } catch (error) {
-      console.log(error.message);
+      console.log(error.response.data);
       throw new Error(error.message);
     }
   }

@@ -249,6 +249,13 @@ const prepareDataNeededForClassCreation = async (req, _, next) => {
     }
   );
 
+  const meeting = await sequalize.query(
+    getMeetingIdByStudentId(req.body.student_id),
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
+
   if (!getLastSubmittedPaidClass.length) {
     if (!getLastPaidClass.length) {
       req.numberOfClasses = CurrentChapters.length * 24;
@@ -257,6 +264,7 @@ const prepareDataNeededForClassCreation = async (req, _, next) => {
   req.currentChapters = CurrentChapters;
   req.lastSubmitted = getLastSubmittedPaidClass;
   req.lastPaid = getLastPaidClass;
+  req.meeting_id = meeting[0].meeting_id;
 
   next(); // modifyNumberOfClasess
 };
@@ -306,7 +314,6 @@ const CreateClasses = async (req, _, next) => {
   const toLoop = 1300;
   const numberIsEqualTo = req.numberOfClasses;
   const Schedule = [...req.SelectedTeacherSchedule];
-  console.log(numberIsEqualTo);
 
   let ClassesTiming = [];
   for (let i = 0; i < toLoop; i++) {
@@ -320,10 +327,9 @@ const CreateClasses = async (req, _, next) => {
     const target = Schedule.find(
       (schedule) => schedule.day === dayOfWeekNumber
     );
-    console.log(target);
     if (target) {
-      inDate.setHours(target.time.split(":")[0]);
-      inDate.setMinutes(target.time.split(":")[1]);
+      inDate.setUTCHours(target.time.split(":")[0]);
+      inDate.setUTCMinutes(target.time.split(":")[1]);
       ClassesTiming.push({
         student_id,
         teacher_id,
@@ -335,6 +341,7 @@ const CreateClasses = async (req, _, next) => {
   req.classes = classes;
   req.paid = true;
   req.teacher_id = teacher_id;
+
   next(); // Zoom
 };
 
@@ -362,22 +369,23 @@ const getClassesData = async (req, res, next) => {
       type: QueryTypes.SELECT,
     }
   );
+  if (!upcoming.length) {
+    res.status(200).json({ msg: "No classes yet" });
+    return;
+  }
   req.classes = upcoming;
   next();
 };
 
 const CreateNextClassIfNeeded = async (req, res, next) => {
-  if (req.classes[0]?.canceled || req.classes[0].meeting_url) {
+  if (req.classes[0]?.canceled || req.classes[0]?.meeting_url) {
     res.status(200).json(req.classes);
     return;
   }
   const student = await models.student.findByPk(parseInt(req.query.id));
-  const meeting = await sequalize.query(
-    getMeetingIdByStudentId(req.query.id),
-    {
-      type: QueryTypes.SELECT,
-    }
-  );
+  const meeting = await sequalize.query(getMeetingIdByStudentId(req.query.id), {
+    type: QueryTypes.SELECT,
+  });
   req.body.st_name = student.name;
   req.paid = true;
   req.meeting_id = meeting[0].meeting_id;

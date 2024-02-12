@@ -32,9 +32,11 @@ const getTeacherClasses = async (req, res) => {
   const day = date
     ? date
     : `${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`;
+
   const paid = await sequelize.query(getTeacherPaidClasses(id, day), {
     type: QueryTypes.SELECT,
   });
+
   const demo = await sequelize.query(getTeacherDemoClasses(id, day), {
     type: QueryTypes.SELECT,
   });
@@ -64,6 +66,17 @@ const createTeacher = async (req, res) => {
 const createTeacherSchedule = async (req, res) => {
   ModelKeysValidate(models.teacher_schedule.rawAttributes, req.body);
   const teacher_schedule = await models.teacher_schedule.create(req.body);
+  res.status(201).json({ teacher_schedule });
+};
+
+const getTeacherSchedule = async (req, res) => {
+  const { id } = req.query;
+  const teacher_schedule = await models.teacher_schedule.findAll({
+    where: {
+      teacher_id: id,
+    },
+    order: [["day", "ASC"]],
+  });
   res.status(201).json({ teacher_schedule });
 };
 
@@ -135,4 +148,5 @@ module.exports = {
   loginTeacher,
   getTeachers,
   getTeacherClasses,
+  getTeacherSchedule,
 };

@@ -9,7 +9,8 @@ const {
   createTeacherSchedule,
   loginTeacher,
   getTeachers,
-  getTeacherClasses
+  getTeacherClasses,
+  getTeacherSchedule
 } = require("../controllers/TeacherController");
 const {
   CheckTeacherEmail,
@@ -23,12 +24,11 @@ router
 
 router.route("/classes/:id").get(getTeacherClasses);
 
+router.route("/schedule").post(createTeacherSchedule).get(getTeacherSchedule);
 router
   .route("/:id")
   .get(getTeacherById)
   .put(updateTeacher)
   .delete(deleteTeacher);
-
-router.route("/schedule").post(createTeacherSchedule);
 
 module.exports = router;

@@ -316,10 +316,10 @@ WHERE
 
 
 SELECT *  FROM codearea.student;
-SELECT *  FROM codearea.student_schedule where codearea.student_schedule.student_id = 85;
+SELECT *  FROM codearea.student_schedule where codearea.student_schedule.student_id = 43;
 ;
 
-SELECT * from codearea.teacher_schedule where teacher_id = 5;
+SELECT * from codearea.teacher_schedule ts where ts.teacher_id = 1;
 SELECT * from codearea.teacher;
 -------------------------------------------------
 SELECT * from codearea.student;
@@ -335,6 +335,10 @@ SELECT * from codearea.course;
 SELECT * from codearea.plan;
 -- mena and salma password changed
 SELECT * from codearea.student ORDER BY codearea.student.id DESC;
+
+
+
+
 SELECT * from codearea.demo_app;
 SELECT * from codearea.demo_app where DATE(created_at) = CURRENT_DATE  ORDER BY codearea.demo_app.id DESC ;
 SELECT * from codearea.demo_class cl where cl.number = '4W9b06AI6hDYZqJ';
@@ -346,26 +350,28 @@ SELECT * from codearea.visitors;
 INSERT INTO codearea.plan (title) VALUES ('STEP BY STEP'), ('CONFIDENT') , ('CUSTOM PATH');
 
 
-SELECT * from codearea.paid_class where student_id = 74 order by appointment;
+SELECT * from codearea.paid_class where student_id = 43 order by appointment;
+
+delete from codearea.paid_class where student_id = 43 and Date(appointment) >= current_date;
 
 
-insert into codearea.slot(appointment) values('2023-12-05T11:00:00.098Z');
-insert into codearea.slot(appointment) values('2023-12-05T12:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-12-05T13:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-12-05T15:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-12-05T16:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-12-05T17:00:42.098Z');
-insert into codearea.slot(appointment) values('2023-12-05T14:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-05-05T11:00:00.098Z');
+insert into codearea.slot(appointment) values('2024-05-05T12:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-05-05T13:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-05-05T15:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-05-05T16:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-05-05T17:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-05-05T14:00:42.098Z');
 
 
 select * from codearea.zoom;
 
 DO $$
 DECLARE
-    slot_id INTEGER := 794;
+    slot_id INTEGER := 822;
     teacher_id INTEGER := 1;
 BEGIN
-    WHILE slot_id <= 800 LOOP
+    WHILE slot_id <= 828 LOOP
         INSERT INTO codearea.slot_availablity(slot_id, teacher_id, created_at, updated_at)
         VALUES (slot_id, teacher_id, NOW(), NOW());
         slot_id := slot_id + 1;

@@ -15,12 +15,13 @@ const create = async (req, res, next) => {
     req.body.st_name
   }`;
 
-
   const { session_id, public_invitation_url } = await vconnect.CreateSession(
     req.meeting_id,
     req.paid ? req.classes[0]?.appointment : slot?.appointment,
     title
   );
+
+  req.meeting = { join_url: public_invitation_url };
 
   if (!req.paid) {
     req.start = slot?.appointment;

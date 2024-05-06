@@ -237,7 +237,7 @@ ORDER BY codearea.operation.created_at DESC;
 
 const getTeacherPaidClasses = (id, date) => {
   return `
-  Select pc.id,pc.student_id, pc.lesson_id,pc.appointment , pc.canceled , pc.ptm , pc.meeting_url , st.name from codearea.paid_class pc 
+  Select pc.id,pc.lesson_id,pc.student_id, pc.lesson_id,pc.appointment , pc.canceled , pc.ptm , pc.meeting_url , st.name from codearea.paid_class pc 
   inner join codearea.teacher te on pc.teacher_id = te.id
   inner join codearea.student st on pc.student_id = st.id
   where pc.teacher_id = ${id} and DATE(pc.appointment) = '${date}';
@@ -246,12 +246,60 @@ const getTeacherPaidClasses = (id, date) => {
 
 const getTeacherDemoClasses = (id, date) => {
   return `
-  Select dm.id, da.st_name as name , sl.appointment , da.parent_phone , da.country ,
+  Select dm.id, dm.meeting_url ,da.st_name as name , sl.appointment , da.parent_phone , da.country ,
   da.st_age as age , da.parent_name , da.st_gender as gender from codearea.demo_class dm
   inner join codearea.teacher te on dm.teacher_id = te.id
   inner join codearea.demo_app da on dm.demo_app_id = da.id
   inner join codearea.slot sl on da.slot_id = sl.id
   where dm.teacher_id = ${id} and DATE(sl.appointment) = '${date}';
+  `;
+};
+
+const getTeacherStudent = (id) => {
+  return `	SELECT st.name,st.email,
+	string_agg(DISTINCT thsc.day::text, ',') as days,
+	string_agg(thsc.time::text, ',') as times,
+	(SELECT COUNT(id) from codearea.paid_class pd where pd.lesson_id is not null  and pd.student_id = st.id) as sessionsDone,
+	(SELECT COUNT(id) from codearea.paid_class pd where date(appointment) > current_date  and pd.student_id = st.id) as remainingClasses,
+	(SELECT COUNT(id) from codearea.paid_class pd where pd.lesson_id is null and date(appointment) < current_date
+	 and pd.student_id = st.id) as sessionsAbsent
+	FROM codearea.student st
+	inner join codearea.teacher th on th.id = st.teacher_id
+	inner join codearea.student_schedule stsc ON stsc.student_id = st.id
+	inner join codearea.teacher_schedule thsc ON thsc.id = stsc.teacher_schedule_id
+	where th.id = ${id}
+	group by st.name , st.id, st.email;`;
+};
+
+const getTeacherSettings = (id) => {
+  return `
+  SELECT th.name , th.private_email, th.address,th.paid_charge,th.demo_charge,
+	(SELECT COUNT(id) from codearea.paid_class pd where pd.lesson_id is not null and pd.teacher_id = ${id}) as paidDone,
+	(SELECT COUNT(id) from codearea.demo_class pd where pd.lesson_id is not null and pd.teacher_id = ${id}) as demoDone,
+	(SELECT COUNT(id) from codearea.paid_class pd where 
+	 pd.lesson_id is not null and pd.teacher_id = ${id} and Extract(month from pd.appointment) = Extract(month from current_date)) 
+	 as paidDoneMonthly,
+	(SELECT COUNT(id) from codearea.demo_class pd where 
+	 pd.lesson_id is not null and pd.teacher_id = ${id} and Extract(month from pd.created_at) = Extract(month from current_date)) 
+	 as demoDoneMonthly,
+	(SELECT COALESCE(SUM(pn.amount),0) from codearea.teacher_penalties pn where pn.teacher_id = ${id}) as totalPenalties,
+	(SELECT COALESCE(SUM(pn.amount),0) from codearea.teacher_penalties pn where pn.teacher_id = ${id}
+	and Extract(month from pn.created_at) = Extract(month from current_date)
+	) as totalPenaltiesMontly
+	from codearea.teacher th 
+	where th.id = ${id};
+  `;
+};
+
+const getTeacherDemoSlots = (id) => {
+  return `
+  select sl.*,
+  (select EXISTS(select * from codearea.demo_app da inner join
+         codearea.demo_class dc on dc.demo_app_id = da.id where da.slot_id = sl.id and dc.teacher_id = ${id} )) as has_demo,
+   (select EXISTS(select * from codearea.slot_availablity sa where sa.slot_id = sl.id and teacher_id = ${id} )) as booked_as_demo
+from codearea.slot sl
+ where sl.appointment > now()
+ order by sl.appointment;
   `;
 };
 
@@ -280,4 +328,7 @@ module.exports = {
   checkIfThereIsPaidTeacher,
   getTeacherDemoClasses,
   getMeetingIdByStudentId,
+  getTeacherStudent,
+  getTeacherSettings,
+  getTeacherDemoSlots,
 };

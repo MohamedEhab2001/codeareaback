@@ -10,7 +10,10 @@ const {
   loginTeacher,
   getTeachers,
   getTeacherClasses,
-  getTeacherSchedule
+  getTeacherSchedule,
+  deleteTeacherSchedule,
+  TeacherStudent,
+  TeacherSetting,
 } = require("../controllers/TeacherController");
 const {
   CheckTeacherEmail,
@@ -19,12 +22,18 @@ const {
 
 router.route("/").post(createTeacher).get(getTeachers);
 router
-.route("/login")
-.post(CheckTeacherEmail, CheckTeacherPassword, loginTeacher);
+  .route("/login")
+  .post(CheckTeacherEmail, CheckTeacherPassword, loginTeacher);
 
 router.route("/classes/:id").get(getTeacherClasses);
+router.route("/students").get(TeacherStudent);
+router.route("/settings").get(TeacherSetting);
 
-router.route("/schedule").post(createTeacherSchedule).get(getTeacherSchedule);
+router
+  .route("/schedule")
+  .post(createTeacherSchedule)
+  .get(getTeacherSchedule)
+  .delete(deleteTeacherSchedule);
 router
   .route("/:id")
   .get(getTeacherById)

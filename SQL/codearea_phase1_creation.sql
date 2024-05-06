@@ -233,6 +233,15 @@ created_at  TIMESTAMP with time zone default now() not null,
 updated_at  TIMESTAMP with time zone default now() not null
 );
 
+/*teacher penalties*/
+create table codearea.teacher_penalties(
+	teacher_id integer not null,
+	amount integer not null,
+	reason varchar not null,
+	created_at  TIMESTAMP with time zone default now() not null,
+	updated_at  TIMESTAMP with time zone default now() not null
+);
+
 
 /*schedule*/
 create table codearea.student_schedule(
@@ -308,18 +317,18 @@ ORDER BY appointment_date;
 
 SELECT * FROM codearea.paid_class
 WHERE
-  codearea.paid_class.student_id = 74
-  AND EXTRACT(MONTH FROM appointment) = 01
-  AND EXTRACT(DAY FROM appointment) = 01
+  codearea.paid_class.student_id = 85
+  AND EXTRACT(MONTH FROM appointment) = 05
+  AND EXTRACT(DAY FROM appointment) = 06
   AND EXTRACT(YEAR FROM appointment) = 2024;
 
 
 
 SELECT *  FROM codearea.student;
-SELECT *  FROM codearea.student_schedule where codearea.student_schedule.student_id = 43;
+SELECT *  FROM codearea.student_schedule where codearea.student_schedule.student_id = 40;
 ;
 
-SELECT * from codearea.teacher_schedule ts where ts.teacher_id = 1;
+SELECT * from codearea.teacher_schedule ts where ts.teacher_id = 2;
 SELECT * from codearea.teacher;
 -------------------------------------------------
 SELECT * from codearea.student;
@@ -336,9 +345,6 @@ SELECT * from codearea.plan;
 -- mena and salma password changed
 SELECT * from codearea.student ORDER BY codearea.student.id DESC;
 
-
-
-
 SELECT * from codearea.demo_app;
 SELECT * from codearea.demo_app where DATE(created_at) = CURRENT_DATE  ORDER BY codearea.demo_app.id DESC ;
 SELECT * from codearea.demo_class cl where cl.number = '4W9b06AI6hDYZqJ';
@@ -350,28 +356,39 @@ SELECT * from codearea.visitors;
 INSERT INTO codearea.plan (title) VALUES ('STEP BY STEP'), ('CONFIDENT') , ('CUSTOM PATH');
 
 
-SELECT * from codearea.paid_class where student_id = 43 order by appointment;
-
-delete from codearea.paid_class where student_id = 43 and Date(appointment) >= current_date;
+SELECT * from codearea.paid_class where student_id = 40 order by appointment;
 
 
-insert into codearea.slot(appointment) values('2024-05-05T11:00:00.098Z');
-insert into codearea.slot(appointment) values('2024-05-05T12:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-05-05T13:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-05-05T15:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-05-05T16:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-05-05T17:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-05-05T14:00:42.098Z');
+
+
+
+
+
+
+
+
+
+-- DELETE WARNIIIIIIIIIIIIIIIIIIIIING
+delete from codearea.paid_class where student_id = 106 and date(appointment) > current_date;
+
+
+insert into codearea.slot(appointment) values('2024-05-07T11:00:00.098Z');
+insert into codearea.slot(appointment) values('2024-05-07T12:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-05-08T13:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-05-07T15:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-05-07T16:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-05-07T17:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-05-07T14:00:42.098Z');
 
 
 select * from codearea.zoom;
 
 DO $$
 DECLARE
-    slot_id INTEGER := 822;
+    slot_id INTEGER := 836;
     teacher_id INTEGER := 1;
 BEGIN
-    WHILE slot_id <= 828 LOOP
+    WHILE slot_id <= 842 LOOP
         INSERT INTO codearea.slot_availablity(slot_id, teacher_id, created_at, updated_at)
         VALUES (slot_id, teacher_id, NOW(), NOW());
         slot_id := slot_id + 1;
@@ -625,4 +642,33 @@ SELECT CURRENT_TIMESTAMP AT TIME ZONE 'Africa/Cairo';
     WHERE codearea.paid_class.appointment AT TIME ZONE 'Africa/Cairo' >=
     CURRENT_TIMESTAMP AT TIME ZONE 'Africa/Cairo' AND codearea.paid_class.student_id = 70
     ORDER BY codearea.paid_class.appointment LIMIT 4;
+	
+	
+	
+	SELECT st.name , thsc.day , thsc.time,
+	(SELECT COUNT(id) from codearea.paid_class pd where pd.lesson_id is not null  and pd.student_id = 85) as sessionsDone,
+	(SELECT COUNT(id) from codearea.paid_class pd where pd.lesson_id is null and date(appointment) < current_date
+	 and pd.student_id = 85) as sessionsAbsent
+	FROM codearea.student st
+	inner join codearea.teacher th on th.id = st.teacher_id
+	inner join codearea.student_schedule stsc ON stsc.student_id = st.id
+	inner join codearea.teacher_schedule thsc ON thsc.id = stsc.teacher_schedule_id
+	where th.id = 6;
 
+	SELECT th.name , th.email, 
+	(SELECT COUNT(id) from codearea.paid_class pd where pd.lesson_id is not null and pd.teacher_id = 6) as paidDone,
+	(SELECT COUNT(id) from codearea.demo_class pd where pd.teacher_id = 6) as demoDone
+	from codearea.teacher th 
+	where th.id = 6;
+	
+	
+	select sl.*,
+		(select EXISTS(select * from codearea.demo_app da inner join
+				   codearea.demo_class dc on dc.demo_app_id = da.id where da.slot_id = sl.id and dc.teacher_id = 6 )) as has_demo,
+	   (select EXISTS(select * from codearea.slot_availablity sa where sa.slot_id = sl.id and teacher_id = 6 )) as booked_as_demo
+	from codearea.slot sl
+	 where sl.appointment > now();
+
+
+
+select * 

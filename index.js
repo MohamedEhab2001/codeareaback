@@ -55,6 +55,8 @@ const defineModels = () => {
     require("./database/models/paid_class"),
     require("./database/models/lesson"),
     require("./database/models/referal_person"),
+    require("./database/models/teacher_penalties"),
+    require("./database/models/slot_availabilty"),
   ];
 
   for (const modelDefiner of modelDefiners) {

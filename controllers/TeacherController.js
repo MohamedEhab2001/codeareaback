@@ -4,9 +4,12 @@ const { models } = require("../database/connect");
 const {
   getTeacherPaidClasses,
   getTeacherDemoClasses,
+  getTeacherStudent,
+  getTeacherSettings,
 } = require("../database/queries");
 const { ModelKeysValidate } = require("../helpers/Validation");
 const jwt = require("jsonwebtoken");
+const { badRequest } = require("../errors");
 
 const getTeachers = async (req, res) => {
   const teachers = await models.teacher.findAll({
@@ -64,9 +67,28 @@ const createTeacher = async (req, res) => {
 };
 
 const createTeacherSchedule = async (req, res) => {
+  const { id } = req.query;
   ModelKeysValidate(models.teacher_schedule.rawAttributes, req.body);
-  const teacher_schedule = await models.teacher_schedule.create(req.body);
-  res.status(201).json({ teacher_schedule });
+
+  const teacher_schedule = await models.teacher_schedule.findAll({
+    where: {
+      teacher_id: id,
+    },
+    order: [["day", "ASC"]],
+  });
+
+  const sameDay = teacher_schedule.filter(
+    (day) =>
+      day.dataValues.day == req.body.day &&
+      day.dataValues.time.split(":")[0] == req.body.time.split(":")[0]
+  );
+
+  if (sameDay.length) {
+    throw new badRequest("You already added this day and time");
+  }
+
+  await models.teacher_schedule.create(req.body);
+  res.status(201).json({ msg: "Created" });
 };
 
 const getTeacherSchedule = async (req, res) => {
@@ -77,7 +99,17 @@ const getTeacherSchedule = async (req, res) => {
     },
     order: [["day", "ASC"]],
   });
-  res.status(201).json({ teacher_schedule });
+  res.status(200).json({ teacher_schedule });
+};
+
+const deleteTeacherSchedule = async (req, res) => {
+  const { id } = req.query;
+  await models.teacher_schedule.destroy({
+    where: {
+      id,
+    },
+  });
+  res.status(200).json({ msg: "deleted" });
 };
 
 const updateTeacher = async (req, res) => {
@@ -92,6 +124,14 @@ const updateTeacher = async (req, res) => {
   }
   await teacher.update(req.body);
   res.status(200).json({ message: "Teacher updated successfully" });
+};
+
+const TeacherStudent = async (req, res) => {
+  const { id } = req.query;
+  const students = await sequelize.query(getTeacherStudent(id), {
+    type: QueryTypes.SELECT,
+  });
+  res.status(200).json({ students });
 };
 
 const deleteTeacher = async (req, res) => {
@@ -138,6 +178,21 @@ const changeTeacherSlotAvailability = async (req, res) => {
   res.status(200).json({ msg: "Adding Schedule Done" });
 };
 
+const TeacherSetting = async (req, res) => {
+  const { id } = req.query;
+  const settings = await sequelize.query(getTeacherSettings(id), {
+    type: QueryTypes.SELECT,
+  });
+
+  const penalites = await models.teacher_penalties.findAll({
+    where: {
+      teacher_id: id,
+    },
+  });
+  console.log(settings);
+  res.status(200).json({ ...settings[0], penalites });
+};
+
 module.exports = {
   getTeacherById,
   createTeacher,
@@ -149,4 +204,7 @@ module.exports = {
   getTeachers,
   getTeacherClasses,
   getTeacherSchedule,
+  deleteTeacherSchedule,
+  TeacherStudent,
+  TeacherSetting,
 };

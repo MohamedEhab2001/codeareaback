@@ -101,7 +101,7 @@ router.route("/schedule/:id").get(CheckStudentSchedule);
 router.route("/teacher/schedule").get(getStudentTeacherSlots);
 router.route("/submit/class_feedback").put(submitFeedback);
 router.route("/joinMeet").post(JoinMeeting);
-router.route("/tommorow/classes").post(TommorowClasses);
+router.route("/tommorow/classes").get(TommorowClasses);
 router.route("/:id").get(StudentById).put(updateStudent);
 
 module.exports = router;

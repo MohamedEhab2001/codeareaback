@@ -303,6 +303,14 @@ from codearea.slot sl
   `;
 };
 
+const getStudentsByTommorowClasses = () => {
+  return `
+  SELECT DISTINCT st.id as student_id , pc.id as class_id
+from codearea.student st inner join codearea.paid_class pc on pc.student_id = st.id where DATE(pc.appointment) = CURRENT_DATE + INTERVAL '1 day';
+
+  `;
+};
+
 module.exports = {
   slot_availabilty_count,
   Teacher_id,
@@ -331,4 +339,5 @@ module.exports = {
   getTeacherStudent,
   getTeacherSettings,
   getTeacherDemoSlots,
+  getStudentsByTommorowClasses,
 };

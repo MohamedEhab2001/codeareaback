@@ -325,8 +325,8 @@ WHERE
 
 
 SELECT *  FROM codearea.student;
-SELECT *  FROM codearea.student_schedule where codearea.student_schedule.student_id = 40;
-;
+SELECT *  FROM codearea.student_schedule where codearea.student_schedule.student_id = 74;
+
 
 SELECT * from codearea.teacher_schedule ts where ts.teacher_id = 2;
 SELECT * from codearea.teacher;
@@ -356,20 +356,14 @@ SELECT * from codearea.visitors;
 INSERT INTO codearea.plan (title) VALUES ('STEP BY STEP'), ('CONFIDENT') , ('CUSTOM PATH');
 
 
-SELECT * from codearea.paid_class where student_id = 40 order by appointment;
+SELECT * from codearea.paid_class where student_id = 44 order by appointment;
 
 
 
 
 
-
-
-
-
-
-
--- DELETE WARNIIIIIIIIIIIIIIIIIIIIING
-delete from codearea.paid_class where student_id = 106 and date(appointment) > current_date;
+-- DELETE WARNING
+delete from codearea.paid_class where student_id = 74 and date(appointment) > current_date;
 
 
 insert into codearea.slot(appointment) values('2024-05-07T11:00:00.098Z');

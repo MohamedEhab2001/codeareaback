@@ -17,6 +17,7 @@ const {
   getStudentOperations,
   checkIfThereIsPaidTeacher,
   getMeetingIdByStudentId,
+  getStudentsByTommorowClasses,
 } = require("../database/queries");
 const { QueryTypes } = require("sequelize");
 const { makeid } = require("../helpers/Methods");
@@ -229,63 +230,63 @@ const addStudentSchedule = async (req, _, next) => {
 };
 
 const prepareDataNeededForClassCreation = async (req, _, next) => {
-  const CurrentChapters = await sequalize.query(
-    getStudentPaidChapter(req.body.student_id),
-    {
-      type: QueryTypes.SELECT,
-    }
-  );
-  const getLastSubmittedPaidClass = await sequalize.query(
-    getLastSubmittedPaidClassId(req.body.student_id),
-    {
-      type: QueryTypes.SELECT,
-    }
-  );
+  // const CurrentChapters = await sequalize.query(
+  //   getStudentPaidChapter(req.body.student_id),
+  //   {
+  //     type: QueryTypes.SELECT,
+  //   }
+  // );
+  // const getLastSubmittedPaidClass = await sequalize.query(
+  //   getLastSubmittedPaidClassId(req.body.student_id),
+  //   {
+  //     type: QueryTypes.SELECT,
+  //   }
+  // );
 
-  const getLastPaidClass = await sequalize.query(
-    getLastPaidClassId(req.body.student_id),
-    {
-      type: QueryTypes.SELECT,
-    }
-  );
+  // const getLastPaidClass = await sequalize.query(
+  //   getLastPaidClassId(req.body.student_id),
+  //   {
+  //     type: QueryTypes.SELECT,
+  //   }
+  // );
 
-  const meeting = await sequalize.query(
-    getMeetingIdByStudentId(req.body.student_id),
-    {
-      type: QueryTypes.SELECT,
-    }
-  );
+  // const meeting = await sequalize.query(
+  //   getMeetingIdByStudentId(req.body.student_id),
+  //   {
+  //     type: QueryTypes.SELECT,
+  //   }
+  // );
 
-  if (!getLastSubmittedPaidClass.length) {
-    if (!getLastPaidClass.length) {
-      req.numberOfClasses = CurrentChapters.length * 24;
-    }
-  }
-  req.currentChapters = CurrentChapters;
-  req.lastSubmitted = getLastSubmittedPaidClass;
-  req.lastPaid = getLastPaidClass;
-  req.meeting_id = meeting[0].meeting_id;
+  // if (!getLastSubmittedPaidClass.length) {
+  //   if (!getLastPaidClass.length) {
+  //     req.numberOfClasses = CurrentChapters.length * 24;
+  //   }
+  // }
+  // req.currentChapters = CurrentChapters;
+  // req.lastSubmitted = getLastSubmittedPaidClass;
+  // req.lastPaid = getLastPaidClass;
+  // req.meeting_id = meeting[0].meeting_id;
 
   next(); // modifyNumberOfClasess
 };
 
 const modifyNumberOfClasess = async (req, res, next) => {
-  if (req.numberOfClasses) {
-    next();
-    return;
-  }
-  if (req.lastSubmitted.length) {
-    req.numberOfClasses = lastPaid.length;
-  }
-  if (req.lastPaid.length && !req.lastSubmitted.length) {
-    req.numberOfClasses = req.currentChapters.length * 24;
-  }
-  await models.paid_class.destroy({
-    where: {
-      lesson_id: null,
-      student_id: req.body.student_id,
-    },
-  });
+  // if (req.numberOfClasses) {
+  //   next();
+  //   return;
+  // }
+  // if (req.lastSubmitted.length) {
+  //   req.numberOfClasses = lastPaid.length;
+  // }
+  // if (req.lastPaid.length && !req.lastSubmitted.length) {
+  //   req.numberOfClasses = req.currentChapters.length * 24;
+  // }
+  // await models.paid_class.destroy({
+  //   where: {
+  //     lesson_id: null,
+  //     student_id: req.body.student_id,
+  //   },
+  // });
   next(); // getTeacherSchedule
 };
 
@@ -312,7 +313,7 @@ const CreateClasses = async (req, _, next) => {
   const student_id = req.body.student_id;
   const teacher_id = req.SelectedTeacherSchedule[0].teacher_id;
   const toLoop = 1300;
-  const numberIsEqualTo = req.numberOfClasses;
+  const numberIsEqualTo = req.body.numberOfClasses;
   const Schedule = [...req.SelectedTeacherSchedule];
 
   let ClassesTiming = [];
@@ -552,6 +553,13 @@ const JoinMeeting = async (req, res) => {
   res.status(200).json({ url });
 };
 
+const TommorowClasses = async (req, res) => {
+  const tommorow = await sequalize.query(getStudentsByTommorowClasses(), {
+    type: QueryTypes.SELECT,
+  });
+  res.status(200).json({ tommorow });
+};
+
 module.exports = {
   createStudent,
   GetStudentIdFromParentEmail,
@@ -586,4 +594,5 @@ module.exports = {
   updateStudent,
   submitFeedback,
   JoinMeeting,
+  TommorowClasses,
 };

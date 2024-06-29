@@ -366,13 +366,13 @@ SELECT * from codearea.paid_class where student_id = 44 order by appointment;
 delete from codearea.paid_class where student_id = 74 and date(appointment) > current_date;
 
 
-insert into codearea.slot(appointment) values('2024-05-07T11:00:00.098Z');
-insert into codearea.slot(appointment) values('2024-05-07T12:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-05-08T13:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-05-07T15:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-05-07T16:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-05-07T17:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-05-07T14:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-07-07T11:00:00.098Z');
+insert into codearea.slot(appointment) values('2024-07-07T12:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-07-08T13:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-07-07T15:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-07-07T16:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-07-07T17:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-07-07T14:00:42.098Z');
 
 
 select * from codearea.zoom;

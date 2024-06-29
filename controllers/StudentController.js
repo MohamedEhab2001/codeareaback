@@ -16,6 +16,7 @@ const {
   SearchInClasses,
   getStudentOperations,
   checkIfThereIsPaidTeacher,
+  getStudentsByTommorowClasses,
 } = require("../database/queries");
 const { QueryTypes } = require("sequelize");
 const { makeid } = require("../helpers/Methods");
@@ -514,6 +515,13 @@ const submitFeedback = async (req, res) => {
   res.status(200).json({ msg: "Feedback submitted" });
 };
 
+const TommorowClasses = async (req, res) => {
+  const tommorow = await sequalize.query(getStudentsByTommorowClasses(), {
+    type: QueryTypes.SELECT,
+  });
+  res.status(200).json({ tommorow });
+};
+
 module.exports = {
   createStudent,
   GetStudentIdFromParentEmail,
@@ -547,4 +555,5 @@ module.exports = {
   studentOperations,
   updateStudent,
   submitFeedback,
+  TommorowClasses
 };

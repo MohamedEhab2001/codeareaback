@@ -77,10 +77,12 @@ const sendPaymenMail = async (req, res) => {
 const sendTechMail = async (req, res) => {
   const zoho = new Zoho();
   const token = await zoho.TestToken();
+
   const redered = TechTemplate({
     parent_name: req.body.parent_name,
     updates: req.body.updates,
   });
+
   await axios.post(
     `https://mail.zoho.com/api/accounts/${process.env.ZOHO_ACCOUNT_ID}/messages`,
     {
@@ -95,6 +97,7 @@ const sendTechMail = async (req, res) => {
       },
     }
   );
+  
   res.json({ msg: "done" });
 };
 
@@ -124,9 +127,6 @@ const sendRenewMail = async (req, res) => {
   );
   res.json({ msg: "done" });
 };
-
-
-
 
 module.exports = {
   prepareDemoMessage,

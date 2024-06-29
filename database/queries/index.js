@@ -303,6 +303,7 @@ from codearea.slot sl
   `;
 };
 
+
 const getStudentsByTommorowClasses = () => {
   return `
   SELECT DISTINCT st.id as student_id , pc.id as class_id

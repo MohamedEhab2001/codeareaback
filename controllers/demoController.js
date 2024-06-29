@@ -9,7 +9,6 @@ const { QueryTypes } = require("sequelize");
 const { makeid } = require("../helpers/Methods");
 const { notFound } = require("../errors");
 const jwt = require("jsonwebtoken");
-const Vconnect = require("../helpers/vconnect");
 
 const addDemo = async (req, res, next) => {
   const newDemo = await models.demoApp.create(req.body);
@@ -28,10 +27,6 @@ const afterDemoRegistration = async (req, res, next) => {
     Delete_Availabilty(req.demo.slot_id, teacher[0].teacher_id)
   );
   req.operations = { ...req.operations, afterDemo: "done" };
-  const vconnect = new Vconnect();
-  const meetings = await vconnect.ListMeetings();
-  console.log(meetings);
-  req.meeting_id = meetings[req.body.ref_id - 1].meeting_id;
   next();
 };
 

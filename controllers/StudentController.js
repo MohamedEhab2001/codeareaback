@@ -16,14 +16,12 @@ const {
   SearchInClasses,
   getStudentOperations,
   checkIfThereIsPaidTeacher,
-  getMeetingIdByStudentId,
-  getStudentsByTommorowClasses,
 } = require("../database/queries");
 const { QueryTypes } = require("sequelize");
 const { makeid } = require("../helpers/Methods");
 const jwt = require("jsonwebtoken");
 const { badRequest } = require("../errors");
-const Vconncet = require("../helpers/vconnect");
+
 const createStudent = async (req, res, next) => {
   const password = makeid(10);
   await models.student.create({
@@ -230,63 +228,55 @@ const addStudentSchedule = async (req, _, next) => {
 };
 
 const prepareDataNeededForClassCreation = async (req, _, next) => {
-  // const CurrentChapters = await sequalize.query(
-  //   getStudentPaidChapter(req.body.student_id),
-  //   {
-  //     type: QueryTypes.SELECT,
-  //   }
-  // );
-  // const getLastSubmittedPaidClass = await sequalize.query(
-  //   getLastSubmittedPaidClassId(req.body.student_id),
-  //   {
-  //     type: QueryTypes.SELECT,
-  //   }
-  // );
+  const CurrentChapters = await sequalize.query(
+    getStudentPaidChapter(req.body.student_id),
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
+  const getLastSubmittedPaidClass = await sequalize.query(
+    getLastSubmittedPaidClassId(req.body.student_id),
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
 
-  // const getLastPaidClass = await sequalize.query(
-  //   getLastPaidClassId(req.body.student_id),
-  //   {
-  //     type: QueryTypes.SELECT,
-  //   }
-  // );
+  const getLastPaidClass = await sequalize.query(
+    getLastPaidClassId(req.body.student_id),
+    {
+      type: QueryTypes.SELECT,
+    }
+  );
 
-  // const meeting = await sequalize.query(
-  //   getMeetingIdByStudentId(req.body.student_id),
-  //   {
-  //     type: QueryTypes.SELECT,
-  //   }
-  // );
-
-  // if (!getLastSubmittedPaidClass.length) {
-  //   if (!getLastPaidClass.length) {
-  //     req.numberOfClasses = CurrentChapters.length * 24;
-  //   }
-  // }
-  // req.currentChapters = CurrentChapters;
-  // req.lastSubmitted = getLastSubmittedPaidClass;
-  // req.lastPaid = getLastPaidClass;
-  // req.meeting_id = meeting[0].meeting_id;
+  if (!getLastSubmittedPaidClass.length) {
+    if (!getLastPaidClass.length) {
+      req.numberOfClasses = CurrentChapters.length * 24;
+    }
+  }
+  req.currentChapters = CurrentChapters;
+  req.lastSubmitted = getLastSubmittedPaidClass;
+  req.lastPaid = getLastPaidClass;
 
   next(); // modifyNumberOfClasess
 };
 
 const modifyNumberOfClasess = async (req, res, next) => {
-  // if (req.numberOfClasses) {
-  //   next();
-  //   return;
-  // }
-  // if (req.lastSubmitted.length) {
-  //   req.numberOfClasses = lastPaid.length;
-  // }
-  // if (req.lastPaid.length && !req.lastSubmitted.length) {
-  //   req.numberOfClasses = req.currentChapters.length * 24;
-  // }
-  // await models.paid_class.destroy({
-  //   where: {
-  //     lesson_id: null,
-  //     student_id: req.body.student_id,
-  //   },
-  // });
+  if (req.numberOfClasses) {
+    next();
+    return;
+  }
+  if (req.lastSubmitted.length) {
+    req.numberOfClasses = lastPaid.length;
+  }
+  if (req.lastPaid.length && !req.lastSubmitted.length) {
+    req.numberOfClasses = req.currentChapters.length * 24;
+  }
+  await models.paid_class.destroy({
+    where: {
+      lesson_id: null,
+      student_id: req.body.student_id,
+    },
+  });
   next(); // getTeacherSchedule
 };
 
@@ -313,8 +303,9 @@ const CreateClasses = async (req, _, next) => {
   const student_id = req.body.student_id;
   const teacher_id = req.SelectedTeacherSchedule[0].teacher_id;
   const toLoop = 1300;
-  const numberIsEqualTo = req.body.numberOfClasses;
+  const numberIsEqualTo = req.numberOfClasses;
   const Schedule = [...req.SelectedTeacherSchedule];
+  console.log(numberIsEqualTo);
 
   let ClassesTiming = [];
   for (let i = 0; i < toLoop; i++) {
@@ -328,9 +319,10 @@ const CreateClasses = async (req, _, next) => {
     const target = Schedule.find(
       (schedule) => schedule.day === dayOfWeekNumber
     );
+    console.log(target);
     if (target) {
-      inDate.setUTCHours(target.time.split(":")[0]);
-      inDate.setUTCMinutes(target.time.split(":")[1]);
+      inDate.setHours(target.time.split(":")[0]);
+      inDate.setMinutes(target.time.split(":")[1]);
       ClassesTiming.push({
         student_id,
         teacher_id,
@@ -342,7 +334,6 @@ const CreateClasses = async (req, _, next) => {
   req.classes = classes;
   req.paid = true;
   req.teacher_id = teacher_id;
-
   next(); // Zoom
 };
 
@@ -370,26 +361,18 @@ const getClassesData = async (req, res, next) => {
       type: QueryTypes.SELECT,
     }
   );
-  if (!upcoming.length) {
-    res.status(200).json({ msg: "No classes yet" });
-    return;
-  }
   req.classes = upcoming;
   next();
 };
 
 const CreateNextClassIfNeeded = async (req, res, next) => {
-  if (req.classes[0]?.canceled || req.classes[0]?.meeting_url) {
+  if (req.classes[0]?.meeting_url || req.classes[0]?.canceled) {
     res.status(200).json(req.classes);
     return;
   }
   const student = await models.student.findByPk(parseInt(req.query.id));
-  const meeting = await sequalize.query(getMeetingIdByStudentId(req.query.id), {
-    type: QueryTypes.SELECT,
-  });
   req.body.st_name = student.name;
   req.paid = true;
-  req.meeting_id = meeting[0].meeting_id;
   if (!req.classes.length) {
     res.status(200).json(req.classes);
     return;
@@ -531,35 +514,6 @@ const submitFeedback = async (req, res) => {
   res.status(200).json({ msg: "Feedback submitted" });
 };
 
-const JoinMeeting = async (req, res) => {
-  const { class_id, moderator, student_id, name } = req.body;
-  const meeting_id = await sequalize.query(
-    getMeetingIdByStudentId(student_id),
-    {
-      type: QueryTypes.SELECT,
-    }
-  );
-  const paid_class = await models.paid_class.findByPk(class_id);
-
-  const vconnect = new Vconncet();
-
-  const url = await vconnect.JoinMeeting(
-    meeting_id[0].meeting_id,
-    name,
-    moderator,
-    paid_class.dataValues.session_id
-  );
-
-  res.status(200).json({ url });
-};
-
-const TommorowClasses = async (req, res) => {
-  const tommorow = await sequalize.query(getStudentsByTommorowClasses(), {
-    type: QueryTypes.SELECT,
-  });
-  res.status(200).json({ tommorow });
-};
-
 module.exports = {
   createStudent,
   GetStudentIdFromParentEmail,
@@ -593,6 +547,4 @@ module.exports = {
   studentOperations,
   updateStudent,
   submitFeedback,
-  JoinMeeting,
-  TommorowClasses,
 };

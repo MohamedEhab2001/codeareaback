@@ -317,9 +317,9 @@ ORDER BY appointment_date;
 
 SELECT * FROM codearea.paid_class
 WHERE
-  codearea.paid_class.student_id = 85
-  AND EXTRACT(MONTH FROM appointment) = 05
-  AND EXTRACT(DAY FROM appointment) = 06
+  codearea.paid_class.student_id = 106
+  AND EXTRACT(MONTH FROM appointment) = 06
+  AND EXTRACT(DAY FROM appointment) = 23
   AND EXTRACT(YEAR FROM appointment) = 2024;
 
 

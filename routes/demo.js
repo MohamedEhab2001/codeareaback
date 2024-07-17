@@ -17,7 +17,7 @@ router
     create,
     createDemoClass,
     createStudent,
-    sendDemoMail
+    //sendDemoMail
   );
 router.route("/:num").get(getDemoBynumber);
 router.route("/referal/:person_id").post(createRefralLink);

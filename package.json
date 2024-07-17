@@ -20,6 +20,7 @@
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.42",
+    "morgan": "^1.10.0",
     "pg": "^8.8.0",
     "sequelize": "^6.28.0",
     "stripe": "^11.8.0"

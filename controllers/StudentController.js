@@ -41,7 +41,7 @@ const createStudent = async (req, res, next) => {
 
   req.operations = { ...req.operations, creatingStudent: "done" };
   req.password = password;
-  next();
+  res.status(200).json({ msg: "Done" });
 };
 
 const updateStudent = async (req, res) => {
@@ -374,6 +374,7 @@ const CreateNextClassIfNeeded = async (req, res, next) => {
   const student = await models.student.findByPk(parseInt(req.query.id));
   req.body.st_name = student.name;
   req.paid = true;
+  console.log(!req.classes.length);
   if (!req.classes.length) {
     res.status(200).json(req.classes);
     return;
@@ -555,5 +556,5 @@ module.exports = {
   studentOperations,
   updateStudent,
   submitFeedback,
-  TommorowClasses
+  TommorowClasses,
 };

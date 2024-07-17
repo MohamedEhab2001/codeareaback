@@ -366,23 +366,24 @@ SELECT * from codearea.paid_class where student_id = 44 order by appointment;
 delete from codearea.paid_class where student_id = 74 and date(appointment) > current_date;
 
 
-insert into codearea.slot(appointment) values('2024-07-07T11:00:00.098Z');
-insert into codearea.slot(appointment) values('2024-07-07T12:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-07-08T13:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-07-07T15:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-07-07T16:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-07-07T17:00:42.098Z');
-insert into codearea.slot(appointment) values('2024-07-07T14:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-07-20T11:00:00.098Z');
+insert into codearea.slot(appointment) values('2024-07-20T12:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-07-20T13:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-07-20T14:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-07-20T15:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-07-20T16:00:42.098Z');
+insert into codearea.slot(appointment) values('2024-07-20T17:00:42.098Z');
+
 
 
 select * from codearea.zoom;
 
 DO $$
 DECLARE
-    slot_id INTEGER := 836;
-    teacher_id INTEGER := 1;
+    slot_id INTEGER := 872;
+    teacher_id INTEGER := 5;
 BEGIN
-    WHILE slot_id <= 842 LOOP
+    WHILE slot_id <= 878 LOOP
         INSERT INTO codearea.slot_availablity(slot_id, teacher_id, created_at, updated_at)
         VALUES (slot_id, teacher_id, NOW(), NOW());
         slot_id := slot_id + 1;

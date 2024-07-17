@@ -15,9 +15,10 @@ const TeacherRoute = require("./routes/TeacherRoute");
 const stripeRouter = require("./routes/stripe");
 const curriculumRouter = require("./routes/curriculum");
 const mailRouter = require("./routes/mailRoute");
+const morgan = require("morgan");
 app.use(express.json());
 app.use(cors());
-
+app.use(morgan("tiny"));
 app.use("/visitor", visitorRoute);
 app.use("/slots", slotsRoute);
 app.use("/demo", demoRoute);

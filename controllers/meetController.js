@@ -32,7 +32,6 @@ const create = async (req, res, next) => {
     participant_name: req.body.st_name,
   };
 
-  console.log(`Bearer ${token}`);
   const response = await axios.post(
     `${process.env.ZOOM_BASE}users/me/meetings`,
     meetingObj,

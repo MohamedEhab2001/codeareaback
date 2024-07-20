@@ -4,7 +4,8 @@ const slot_availabilty_count = () => {
   from codearea.slot_availablity
   inner join codearea.slot
   on codearea.slot_availablity.slot_id = codearea.slot.id
-  where codearea.slot.appointment > now()+ interval '0 DAY';
+  where codearea.slot.appointment > now()+ interval '0 DAY'
+  ORDER BY codearea.slot.appointment;
 `;
 };
 
@@ -302,7 +303,6 @@ from codearea.slot sl
  order by sl.appointment;
   `;
 };
-
 
 const getStudentsByTommorowClasses = () => {
   return `
